@@ -53,12 +53,16 @@ clean:
 
 compile:
 	@echo "Deno Compile ..."
-	deno compile -A --unstable --lite mod.ts
+	$(BUILD) -A --unstable --lite mod.ts
 
 inspect:
 	@echo "Deno inspect ..."
 	@echo "Open chrome & chrome://inspect"
 	${INSPECT} --allow-all --unstable mod.ts
+
+doc:
+	@echo "Deno Compile ..."
+	$(DOCS) > docs.json
 
 env:
 	@echo "Version: $(VERSION)"
