@@ -53,7 +53,7 @@ clean:
 
 compile:
 	@echo "Deno Compile ..."
-	deno compile -A --unstable mod.ts
+	deno compile -A --unstable --lite mod.ts
 
 inspect:
 	@echo "Deno inspect ..."
