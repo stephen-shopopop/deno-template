@@ -1,33 +1,68 @@
-# Go parameters
+# Deno parameters
 DENO=deno
-DENOBUILD=$(DENO) compile
-DENOBUNDLE=${DENO} bundle
-DENORUN=$(DENO) run
-DENOTEST=$(DENO) test
-DENODOC=$(DENO) doc
-DENOLINT=$(DENO) lint
-DENOFMT=$(DENO) fmt
+BUNDLE=$(DENO) bundle
+RUN=$(DENO) run
+TEST=$(DENO) test
+FMT=$(DENO) fmt
+LINT=$(DENO) lint
+BUILD=${DENO} compile
+DEPS=${DENO} info
+DOCS=${DENO} doc mod.ts --json
+INSPECT=${DENO} run --inspect
+VERSION=0.0.1
+DESCRIPTION=Benchmark tools
 AUTHOR=stephendltg
 DENOVERSION=1.18.1
 
-all: pre-install
+all: install
 
-pre-install: 
+install: 
 	@echo "Installing project..."
-	deno upgrade --version ${DENOVERSION}
+	$(DENO) upgrade --version ${DENOVERSION}
+	$(DENO) install
+
+version:
+	@echo "Version Deno ..."
+	$(DENO) --version
+
+upgrade:
+	@echo "Update Deno ..."
+	$(DENO) upgrade
+
+tool:
+	@echo "Deno tools ..."
+	${DEPS}
+	${FMT}
+	${LINT} --unstable
 
 dev:
-	$(DENORUN) -Ar --watch mod.ts
+	@echo "Deno dev ..."
+	$(RUN) --allow-all --unstable --watch mod.ts 
 
-lint:
-	$(DENOLINT) mod.ts
-
-fmt:
-	${DENOFMT} mod.ts
+test:
+	@echo "Deno test ..."
+	$(TEST)
 
 bundle:
-	${DENOBUNDLE} mod.ts module.bundle.js
+	@echo "Deno bundle ..."
+	$(BUNDLE) mod.ts module.bundle.js
+	
+clean:
+	@echo "Deno clean ..."
+	rm -f module.bundle.js
 
+compile:
+	@echo "Deno Compile ..."
+	deno compile -A --unstable mod.ts
 
-help:
-	@echo "make: prepare project"
+inspect:
+	@echo "Deno inspect ..."
+	@echo "Open chrome & chrome://inspect"
+	${INSPECT} --allow-all --unstable mod.ts
+
+env:
+	@echo "Version: $(VERSION)"
+	@echo "Description: $(DESCRIPTION)"
+	@echo "Author: $(AUTHOR)"
+	@echo "Deno: ${DENOVERSION}"
+	$(DEPS)
