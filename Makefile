@@ -41,7 +41,7 @@ dev:
 
 test:
 	@echo "Deno test ..."
-	$(TEST)
+	$(TEST) --coverage=cov_profile
 
 bundle:
 	@echo "Deno bundle ..."
