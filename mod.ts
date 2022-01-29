@@ -1,4 +1,4 @@
-#!/usr/bin/env -S deno run --allow-read=. --allow-net --allow-env --allow-hrtime
+#!/usr/bin/env deno run --allow-env --allow-run
 
 /**
  * Adds x and y.
