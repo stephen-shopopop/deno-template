@@ -9,7 +9,7 @@
   "deno.suggest.completeFunctionCalls": true,
   "deno.suggest.names": true,
   "deno.suggest.paths": true,
-  "deno.suggest.autoImports: true,
+  "deno.suggest.autoImports": true,
   "deno.suggest.imports.autoDiscover": true,
   "deno.suggest.imports.hosts": true
 }
