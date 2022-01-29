@@ -1,0 +1,26 @@
+#!/usr/bin/env -S deno run --allow-read=. --allow-net --allow-env --allow-hrtime
+
+/**
+ * Adds x and y.
+ * @param {number} x
+ * @param {number} y
+ * @returns {number} Sum of x and y
+ */
+export function add(x: number, y: number): number {
+  return x + y;
+}
+
+/**
+ * Uppercase string
+ * @param {string} value
+ * @returns {string} upppercase
+ *
+ * ```ts
+ * const t = test('hello)
+ * ```
+ */
+export function test(value: string): string {
+  return value.toUpperCase();
+}
+
+console.log(test("Hello world!"));
