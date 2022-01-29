@@ -11,5 +11,7 @@
   "deno.suggest.paths": true,
   "deno.suggest.autoImports": true,
   "deno.suggest.imports.autoDiscover": true,
-  "deno.suggest.imports.hosts": true
+  "deno.suggest.imports.hosts": {
+    "https://deno.land": true
+  }
 }
