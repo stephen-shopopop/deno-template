@@ -6,7 +6,7 @@
  * @param {number} y
  * @returns {number} Sum of x and y
  */
-export function add (x: number, y: number): number {
+export function add(x: number, y: number): number {
   return x + y;
 }
 
@@ -19,7 +19,7 @@ export function add (x: number, y: number): number {
  * const t = test('hello)
  * ```
  */
-export function upperString (value: string): string {
+export function upperString(value: string): string {
   return value.toUpperCase();
 }
 
