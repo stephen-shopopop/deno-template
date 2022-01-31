@@ -1,6 +1,7 @@
 # Others
 docs.json
 module.bundle.js
+cov_profile
 
 # Logs
 logs
