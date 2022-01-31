@@ -1,3 +1,4 @@
+#!make
 # Deno parameters
 DENO=deno
 BUNDLE=$(DENO) bundle
@@ -10,7 +11,7 @@ DEPS=${DENO} info
 DOCS=${DENO} doc mod.ts --json
 INSPECT=${DENO} run --inspect
 VERSION=0.0.1
-DESCRIPTION=Benchmark tools
+DESCRIPTION=Deno template
 AUTHOR=stephendltg
 DENOVERSION=1.18.1
 
@@ -32,8 +33,12 @@ upgrade:
 tool:
 	@echo "Deno tools ..."
 	${DEPS}
-	${FMT}
+	${FMT} --check
 	${LINT} --unstable
+
+fmt: 
+	@echo "Deno format ..."
+	${FMT}
 
 dev:
 	@echo "Deno dev ..."
@@ -53,7 +58,7 @@ clean:
 
 compile:
 	@echo "Deno Compile ..."
-	$(BUILD) -A --unstable --lite mod.ts
+	$(BUILD) -A --unstable mod.ts
 
 inspect:
 	@echo "Deno inspect ..."
