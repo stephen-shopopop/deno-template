@@ -2,6 +2,7 @@
 docs.json
 module.bundle.js
 cov_profile
+bin
 
 # Logs
 logs

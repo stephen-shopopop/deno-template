@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "dev": "deno run --allow-all --unstable --watch mod.ts",
+    "check": "deno task lint && deno task fmt",
+    "fmt": "deno fmt --check",
+    "fmt:fix": "deno fmt",
+    "lint": "deno lint --unstable",
+    "fileserver": "deno run --allow-read --allow-net https://deno.land/std@0.136.0/http/file_server.ts ."
+  }
+}

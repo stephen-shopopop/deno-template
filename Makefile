@@ -1,4 +1,8 @@
 #!make
+NAME=myapp
+VERSION=0.0.1
+DESCRIPTION=Deno template
+AUTHOR=stephendltg
 # Deno parameters
 DENO=deno
 BUNDLE=$(DENO) bundle
@@ -9,10 +13,7 @@ LINT=$(DENO) lint
 BUILD=${DENO} compile
 DEPS=${DENO} info
 DOCS=${DENO} doc mod.ts --json
-INSPECT=${DENO} run --inspect
-VERSION=0.0.1
-DESCRIPTION=Deno template
-AUTHOR=stephendltg
+INSPECT=${DENO} run --inspect-brk
 DENOVERSION=1.21.0
 
 all: install
@@ -55,10 +56,16 @@ bundle:
 clean:
 	@echo "Deno clean ..."
 	rm -f module.bundle.js
+	rm -f bin/*
 
 compile:
 	@echo "Deno Compile ..."
-	$(BUILD) -A --unstable mod.ts
+	rm -f bin/*
+	$(BUILD) --output=bin/${NAME} -A --unstable mod.tss
+# $(BUILD) --output=bin/${NAME}.exe --target=x86_64-pc-windows-msvc -A --unstable mod.ts
+# $(BUILD) --output=bin/${NAME}_x86_64 --target=x86_64-unknown-linux-gnu -A --unstable mod.ts
+# $(BUILD) --output=bin/${NAME}_darwin_x86_64 --target=x86_64-apple-darwin -A --unstable mod.ts
+# $(BUILD) --output=bin/${NAME}_darwin_aarch64 --target=x86_64-apple-darwin -A --unstable mod.ts
 
 inspect:
 	@echo "Deno inspect ..."
@@ -66,12 +73,16 @@ inspect:
 	${INSPECT} --allow-all --unstable mod.ts
 
 doc:
-	@echo "Deno Compile ..."
+	@echo "Deno Doc ..."
 	$(DOCS) > docs.json
 
 env:
+	@echo "==============================="
+	@echo "Version: $(NAME)"
 	@echo "Version: $(VERSION)"
 	@echo "Description: $(DESCRIPTION)"
 	@echo "Author: $(AUTHOR)"
 	@echo "Deno: ${DENOVERSION}"
+	@echo "==============================="
 	$(DEPS)
+	@echo "==============================="
