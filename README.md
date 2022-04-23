@@ -8,6 +8,13 @@
 
 ## Tools
 
+### Tasks
+
+```bash
+1. deno task dev
+2. deno task checks
+```
+
 ### VSCODE addons
 
 [deno for vscode](https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno)
