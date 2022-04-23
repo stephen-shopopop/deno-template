@@ -16,7 +16,7 @@ DOCS=${DENO} doc mod.ts --json
 INSPECT=${DENO} run --inspect-brk
 DENOVERSION=1.21.0
 
-all: install
+all: help
 
 install: 
 	@echo "Installing project..."
