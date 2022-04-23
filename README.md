@@ -8,6 +8,10 @@
 
 [Installation deno](https://deno.land/#installation)
 
+```bash
+deno run --allow-env --allow-run mod.ts
+```
+
 ## Tools
 
 ### Tasks (unstable)
