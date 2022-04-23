@@ -31,8 +31,8 @@ upgrade:
 	@echo "Update Deno ..."
 	$(DENO) upgrade
 
-tool:
-	@echo "Deno tools ..."
+check:
+	@echo "Deno check ..."
 	${DEPS}
 	${FMT} --check
 	${LINT} --unstable
@@ -76,7 +76,7 @@ doc:
 	@echo "Deno Doc ..."
 	$(DOCS) > docs.json
 
-env:
+help:
 	@echo "==============================="
 	@echo "Version: $(NAME)"
 	@echo "Version: $(VERSION)"
