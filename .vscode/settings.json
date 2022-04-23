@@ -13,5 +13,7 @@
   "deno.suggest.imports.autoDiscover": true,
   "deno.suggest.imports.hosts": {
     "https://deno.land": true
-  }
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "denoland.vscode-deno"
 }
