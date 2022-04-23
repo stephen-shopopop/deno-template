@@ -8,19 +8,20 @@
 
 [Installation deno](https://deno.land/#installation)
 
+## Usage
+
 ```bash
 deno run --allow-env --allow-run mod.ts
 ```
 
-## Tools
-
 ### Tasks (unstable)
 
 ```bash
-1. deno task dev
-2. deno task check
-3. deno task test
-4. deno task fmt
+1. deno task start
+2. deno task dev
+3. deno task check
+4. deno task test
+5. deno task fmt
 ```
 
 ### Make (linux/darwin)
@@ -35,7 +36,7 @@ deno run --allow-env --allow-run mod.ts
 7. make inspect // inspect with chrome
 ```
 
-### VSCODE addons
+## VSCODE addons
 
 All configuration for VsCode: autofix, debugger, etc...
 
