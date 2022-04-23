@@ -14,7 +14,9 @@
 
 ```bash
 1. deno task dev
-2. deno task checks
+2. deno task check
+3. deno task test
+4. deno task fmt
 ```
 
 ### Make (linux/darwin)
