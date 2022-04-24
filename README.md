@@ -43,3 +43,7 @@ deno run --allow-env --allow-run mod.ts
 All configuration for VsCode: autofix, debugger, etc...
 
 [deno for vscode](https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno)
+
+## Documentation generator
+
+[Deno doc](https://doc.deno.land)
