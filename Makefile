@@ -14,7 +14,7 @@ BUILD=${DENO} compile
 DEPS=${DENO} info
 DOCS=${DENO} doc mod.ts --json
 INSPECT=${DENO} run --inspect-brk
-DENOVERSION=1.21.0
+DENOVERSION=1.21.1
 
 all: help
 
