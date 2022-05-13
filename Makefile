@@ -61,7 +61,7 @@ clean:
 compile:
 	@echo "Deno Compile ..."
 	rm -f bin/*
-	$(BUILD) --output=bin/${NAME} -A --unstable mod.tss
+	$(BUILD) --output=bin/${NAME} -A --unstable mod.ts
 # $(BUILD) --output=bin/${NAME}.exe --target=x86_64-pc-windows-msvc -A --unstable mod.ts
 # $(BUILD) --output=bin/${NAME}_x86_64 --target=x86_64-unknown-linux-gnu -A --unstable mod.ts
 # $(BUILD) --output=bin/${NAME}_darwin_x86_64 --target=x86_64-apple-darwin -A --unstable mod.ts
