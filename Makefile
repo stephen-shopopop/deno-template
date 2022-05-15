@@ -1,8 +1,6 @@
 #!make
 NAME        = myapp
 VERSION		 ?= $(shell cat $(PWD)/.version 2> /dev/null || echo v0)
-DESCRIPTION = Deno template
-AUTHOR      = stephendltg
 
 # Deno commands
 DENO    = deno
