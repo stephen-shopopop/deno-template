@@ -1,65 +1,70 @@
 #!make
-NAME=myapp
-VERSION=0.0.1
-DESCRIPTION=Deno template
-AUTHOR=stephendltg
-# Deno parameters
-DENO=deno
-BUNDLE=$(DENO) bundle
-RUN=$(DENO) run
-TEST=$(DENO) test
-FMT=$(DENO) fmt
-LINT=$(DENO) lint
-BUILD=${DENO} compile
-DEPS=${DENO} info
-DOCS=${DENO} doc mod.ts --json
-INSPECT=${DENO} run --inspect-brk
-DENOVERSION=1.21.1
+NAME        = myapp
+VERSION		 ?= $(shell cat $(PWD)/.version 2> /dev/null || echo v0)
+DESCRIPTION = Deno template
+AUTHOR      = stephendltg
 
-all: help
+# Deno commands
+DENO    = deno
+BUNDLE  = $(DENO) bundle
+RUN     = $(DENO) run
+TEST    = $(DENO) test
+FMT     = $(DENO) fmt
+LINT    = $(DENO) lint
+BUILD   = ${DENO} compile
+DEPS    = ${DENO} info
+DOCS    = ${DENO} doc mod.ts --json
+INSPECT = ${DENO} run --inspect-brk
 
-install: 
-	@echo "Installing project..."
+DENOVERSION = 1.21.1
+
+.PHONY: help clean install deno-version deno-upgrade check fmt dev test bundle build inspect doc all release
+
+default: help
+
+# show this help
+help:
+	@echo 'usage: make [target] ...'
+	@echo ''
+	@echo 'targets:'
+	@grep -E '^[a-z.A-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+all: ## deno fmt, lint and run test
+  make check
+  make test
+
+install: ## install deno version and dependencies
 	$(DENO) upgrade --version ${DENOVERSION}
 	$(DENO) install
 
-version:
-	@echo "Version Deno ..."
+deno-version: ## deno version
 	$(DENO) --version
 
-upgrade:
-	@echo "Update Deno ..."
+deno-upgrade: ## deno upgrade
 	$(DENO) upgrade
 
-check:
-	@echo "Deno check ..."
+check: ## deno check files
 	${DEPS}
 	${FMT} --check
 	${LINT} --unstable
 
-fmt: 
-	@echo "Deno format ..."
+fmt: ## deno format files
 	${FMT}
 
-dev:
-	@echo "Deno dev ..."
+dev: ## deno run dev mode
 	$(RUN) --allow-all --unstable --watch mod.ts 
 
-test:
-	@echo "Deno test ..."
+test: ## deno run test
 	$(TEST) --coverage=cov_profile
 
-bundle:
-	@echo "Deno bundle ..."
+bundle: ## deno build bundle
 	$(BUNDLE) mod.ts module.bundle.js
 	
-clean:
-	@echo "Deno clean ..."
+clean: ## clean bundle and binary
 	rm -f module.bundle.js
 	rm -f bin/*
 
-compile:
-	@echo "Deno Compile ..."
+build: ## deno build binary
 	rm -f bin/*
 	$(BUILD) --output=bin/${NAME} -A --unstable mod.ts
 # $(BUILD) --output=bin/${NAME}.exe --target=x86_64-pc-windows-msvc -A --unstable mod.ts
@@ -67,22 +72,13 @@ compile:
 # $(BUILD) --output=bin/${NAME}_darwin_x86_64 --target=x86_64-apple-darwin -A --unstable mod.ts
 # $(BUILD) --output=bin/${NAME}_darwin_aarch64 --target=x86_64-apple-darwin -A --unstable mod.ts
 
-inspect:
-	@echo "Deno inspect ..."
+inspect: ## deno inspect 
 	@echo "Open chrome & chrome://inspect"
 	${INSPECT} --allow-all --unstable mod.ts
 
-doc:
-	@echo "Deno Doc ..."
+doc: ## deno doc
 	$(DOCS) > docs.json
-
-help:
-	@echo "==============================="
-	@echo "Version: $(NAME)"
-	@echo "Version: $(VERSION)"
-	@echo "Description: $(DESCRIPTION)"
-	@echo "Author: $(AUTHOR)"
-	@echo "Deno: ${DENOVERSION}"
-	@echo "==============================="
-	$(DEPS)
-	@echo "==============================="
+  
+release:
+	git tag ${VERSION}
+	git push --tags
