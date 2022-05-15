@@ -11,10 +11,10 @@ RUN     = $(DENO) run
 TEST    = $(DENO) test
 FMT     = $(DENO) fmt
 LINT    = $(DENO) lint
-BUILD   = ${DENO} compile
-DEPS    = ${DENO} info
-DOCS    = ${DENO} doc mod.ts --json
-INSPECT = ${DENO} run --inspect-brk
+BUILD   = $(DENO) compile
+DEPS    = $(DENO) info
+DOCS    = $(DENO) doc mod.ts --json
+INSPECT = $(DENO) run --inspect-brk
 
 DENOVERSION = 1.21.1
 
@@ -34,7 +34,7 @@ all: ## deno fmt, lint and run test
   make test
 
 install: ## install deno version and dependencies
-	$(DENO) upgrade --version ${DENOVERSION}
+	$(DENO) upgrade --version $(DENOVERSION)
 	$(DENO) install
 
 deno-version: ## deno version
@@ -44,12 +44,12 @@ deno-upgrade: ## deno upgrade
 	$(DENO) upgrade
 
 check: ## deno check files
-	${DEPS}
-	${FMT} --check
-	${LINT} --unstable
+	$(DEPS)
+	$(FMT) --check
+	$(LINT) --unstable
 
 fmt: ## deno format files
-	${FMT}
+	$(FMT)
 
 dev: ## deno run dev mode
 	$(RUN) --allow-all --unstable --watch mod.ts 
@@ -74,11 +74,11 @@ build: ## deno build binary
 
 inspect: ## deno inspect 
 	@echo "Open chrome & chrome://inspect"
-	${INSPECT} --allow-all --unstable mod.ts
+	$(INSPECT) --allow-all --unstable mod.ts
 
 doc: ## deno doc
 	$(DOCS) > docs.json
   
 release:
-	git tag ${VERSION}
+	git tag $(VERSION)
 	git push --tags
