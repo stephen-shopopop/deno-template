@@ -60,7 +60,7 @@ bundle: ## deno build bundle
 	
 clean: ## clean bundle and binary
 	rm -f module.bundle.js
-	rm -f bin/*
+	rm -fr bin
 
 build: ## deno build binary
 	rm -f bin/*
