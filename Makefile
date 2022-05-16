@@ -1,5 +1,5 @@
 #!make
-NAME        = myapp
+NAME       ?= $(shell basename $(CURDIR))
 VERSION		 ?= $(shell cat $(PWD)/.version 2> /dev/null || echo v0)
 
 # Deno commands
@@ -16,7 +16,7 @@ INSPECT = $(DENO) run --inspect-brk
 
 DENOVERSION = 1.21.1
 
-.PHONY: help clean install deno-version deno-upgrade check fmt dev test bundle build inspect doc all release
+.PHONY: help clean deno-install install deno-version deno-upgrade check fmt dev env test bundle build inspect doc all release
 
 default: help
 
@@ -27,13 +27,13 @@ help:
 	@echo 'targets:'
 	@grep -E '^[a-z.A-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-all: ## deno fmt, lint and run test
-  make check
-  make test
+env: ## environment project
+	@echo $(CURDIR)
+	@echo $(NAME)
+	@echo $(VERSION)
 
-install: ## install deno version and dependencies
+deno-install: ## install deno version and dependencies
 	$(DENO) upgrade --version $(DENOVERSION)
-	$(DENO) install
 
 deno-version: ## deno version
 	$(DENO) --version
@@ -54,6 +54,9 @@ dev: ## deno run dev mode
 
 test: ## deno run test
 	$(TEST) --coverage=cov_profile
+
+install:
+	$(DENO) install .
 
 bundle: ## deno build bundle
 	$(BUNDLE) mod.ts module.bundle.js
