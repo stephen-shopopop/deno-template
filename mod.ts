@@ -13,7 +13,7 @@ export function add(x: number, y: number): number {
 /**
  * Uppercase string
  * @param {string} value
- * @returns {string} upppercase
+ * @returns {string} uppercase
  *
  * ```ts
  * const t = test('hello)
@@ -24,3 +24,5 @@ export function upperString(value: string): string {
 }
 
 console.log(upperString("Hello world!"));
+
+console.log(add(9, 5));
