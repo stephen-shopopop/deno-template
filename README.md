@@ -8,8 +8,8 @@
 
 [Installation deno](https://deno.land/#installation)
 
-[Documentation](https://doc.deno.land/https://raw.githubusercontent.com/stephen-shopopop/deno-template/main/mod.ts)
-
+- [Documentation](https://doc.deno.land/https://raw.githubusercontent.com/stephen-shopopop/deno-template/main/mod.ts)
+- [cheat code](https://oscarotero.com/deno/?utm_source=denonews&utm_medium=email)
 ## Usage
 
 ```bash
