@@ -1,7 +1,7 @@
 {
   "tasks": {
     "start": "deno run --allow-env --allow-run mod.ts",
-    "dev": "deno run --allow-all --unstable --watch mod.ts",
+    "dev": "deno run --allow-all --unstable mod.ts",
     "test": "deno test",
     "check": "deno task lint && deno task fmt:check",
     "fmt:check": "deno fmt --check",
