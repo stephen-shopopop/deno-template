@@ -1,13 +1,12 @@
 {
   "tasks": {
-    "start": "deno run --allow-env --allow-run app.ts",
-    "dev": "deno run --allow-all --unstable app.ts",
+    "start": "deno run --allow-env --allow-run mod.ts",
+    "dev": "deno run --allow-all --unstable mod.ts",
     "test": "deno test",
     "check": "deno task lint && deno task fmt:check",
     "fmt:check": "deno fmt --check",
     "fmt": "deno fmt",
     "lint": "deno lint --unstable",
     "fileserver": "deno run --allow-read --allow-net https://deno.land/std@0.136.0/http/file_server.ts ."
-  },
-  "importMap": "./import_map.json"
+  }
 }

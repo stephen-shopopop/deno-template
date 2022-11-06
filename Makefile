@@ -50,7 +50,7 @@ fmt: ## deno format files
 	$(FMT)
 
 dev: ## deno run dev mode
-	$(RUN) --allow-all --unstable --watch app.ts 
+	$(RUN) --allow-all --unstable --watch mod.ts 
 
 test: ## deno run test
 	$(TEST) --coverage=cov_profile
@@ -59,7 +59,7 @@ install:
 	$(DENO) install .
 
 bundle: ## deno build bundle
-	$(BUNDLE) app.ts module.bundle.js
+	$(BUNDLE) mod.ts module.bundle.js
 	
 clean: ## clean bundle and binary
 	rm -f module.bundle.js
@@ -67,15 +67,15 @@ clean: ## clean bundle and binary
 
 build: ## deno build binary
 	rm -f bin/*
-	$(BUILD) --output=bin/${NAME} -A --unstable app.ts
-	$(BUILD) --output=bin/${NAME}.exe --target=x86_64-pc-windows-msvc -A --unstable app.ts
-	$(BUILD) --output=bin/${NAME}_x86_64 --target=x86_64-unknown-linux-gnu -A --unstable app.ts
-	$(BUILD) --output=bin/${NAME}_darwin_x86_64 --target=x86_64-apple-darwin -A --unstable app.ts
-	$(BUILD) --output=bin/${NAME}_darwin_aarch64 --target=x86_64-apple-darwin -A --unstable app.ts
+	$(BUILD) --output=bin/${NAME} -A --unstable mod.ts
+	$(BUILD) --output=bin/${NAME}.exe --target=x86_64-pc-windows-msvc -A --unstable mod.ts
+	$(BUILD) --output=bin/${NAME}_x86_64 --target=x86_64-unknown-linux-gnu -A --unstable mod.ts
+	$(BUILD) --output=bin/${NAME}_darwin_x86_64 --target=x86_64-apple-darwin -A --unstable mod.ts
+	$(BUILD) --output=bin/${NAME}_darwin_aarch64 --target=x86_64-apple-darwin -A --unstable mod.ts
 
 inspect: ## deno inspect 
 	@echo "Open chrome & chrome://inspect"
-	$(INSPECT) --allow-all --unstable app.ts
+	$(INSPECT) --allow-all --unstable mod.ts
 
 doc: ## deno doc
 	$(DOCS) > docs.json
