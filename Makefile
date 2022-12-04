@@ -33,33 +33,33 @@ env: ## environment project
 	@echo $(VERSION)
 
 deno-install: ## install deno version and dependencies
-	$(DENO) upgrade --version $(DENOVERSION)
+	@$(DENO) upgrade --version $(DENOVERSION)
 
 deno-version: ## deno version
-	$(DENO) --version
+	@$(DENO) --version
 
 deno-upgrade: ## deno upgrade
-	$(DENO) upgrade
+	@$(DENO) upgrade
 
 check: ## deno check files
-	$(DEPS)
-	$(FMT) --check
-	$(LINT) --unstable
+	@$(DEPS)
+	@$(FMT) --check
+	@$(LINT) --unstable
 
 fmt: ## deno format files
-	$(FMT)
+	@$(FMT)
 
 dev: ## deno run dev mode
-	$(RUN) --allow-all --unstable --watch mod.ts 
+	@$(RUN) --allow-all --unstable --watch mod.ts 
 
 test: ## deno run test
-	$(TEST) --coverage=cov_profile
+	@$(TEST) --coverage=cov_profile
 
 install:
-	$(DENO) install .
+	@(DENO) install .
 
 bundle: ## deno build bundle
-	$(BUNDLE) mod.ts module.bundle.js
+	@$(BUNDLE) mod.ts module.bundle.js
 	
 clean: ## clean bundle and binary
 	rm -f module.bundle.js
@@ -78,7 +78,7 @@ inspect: ## deno inspect
 	$(INSPECT) --allow-all --unstable mod.ts
 
 doc: ## deno doc
-	$(DOCS) > docs.json
+	@$(DOCS) > docs.json
   
 release:
 	git tag $(VERSION)
