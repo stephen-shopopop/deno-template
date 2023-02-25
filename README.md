@@ -1,4 +1,4 @@
-[![Minimal deno version](https://img.shields.io/static/v1?label=deno&message=%3E=1.29.1&color)](https://deno.land/manual@v1.29.1/getting_started)
+[![Minimal deno version](https://img.shields.io/static/v1?label=deno&message=%3E=1.31.1&color)](https://deno.land/manual@v1.31.1/getting_started)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/stephen-shopopop/deno-template/graphs/commit-activity)
 [![Linux](https://svgshare.com/i/Zhy.svg)](https://svgshare.com/i/Zhy.svg)
 [![macOS](https://svgshare.com/i/ZjP.svg)](https://svgshare.com/i/ZjP.svg)
