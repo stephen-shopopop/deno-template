@@ -14,7 +14,7 @@ DEPS    = $(DENO) info
 DOCS    = $(DENO) doc mod.ts --json
 INSPECT = $(DENO) run --inspect-brk
 
-DENOVERSION = 1.31.1
+DENOVERSION = 1.46.3
 
 .PHONY: help clean deno-install install deno-version deno-upgrade check fmt dev env test bundle build inspect doc all release
 
