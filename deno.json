@@ -8,6 +8,7 @@
     "fmt:check": "deno fmt --check",
     "fmt": "deno fmt",
     "lint": "deno lint --unstable",
-    "fileserver": "deno run --allow-read --allow-net https://deno.land/std@0.136.0/http/file_server.ts ."
-  }
+    "fileserver": "deno run --allow-read --allow-net jsr:@std/http/file-server ."
+  },
+  "unstable": ["cron", "kv"]
 }

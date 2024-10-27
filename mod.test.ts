@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.123.0/testing/asserts.ts";
+import { assertEquals } from "jsr:@std/assert";
 import { upperString } from "./mod.ts";
 
 // Compact form: name and function
