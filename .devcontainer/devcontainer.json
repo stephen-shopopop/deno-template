@@ -1,10 +1,13 @@
 {
   "name": "Deno",
   "build": {
-    "dockerfile": "Dockerfile",
-    // Update 'VARIANT' to pick an Debian OS version: bullseye, buster
-    "args": {
-      "VARIANT": "bullseye"
+    "dockerfile": "Dockerfile"
+  },
+  "runArgs": [
+      "--userns=keep-id"
+  ],
+  "containerEnv": {
+      "HOME": "/home/node"
   },
 
   // Configure tool-specific properties.
