@@ -1,15 +1,7 @@
-# [Choice] Debian OS version: bullseye, buster
-ARG VARIANT=bullseye
-FROM --platform=linux/amd64 mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
+FROM mcr.microsoft.com/devcontainers/typescript-node:22
 
-ENV DENO_INSTALL=/deno
-RUN mkdir -p /deno \
-    && curl -fsSL https://deno.land/install.sh | sh \
-    && chown -R vscode /deno
+# Install Deno
+ENV DENO_INSTALL=/usr/local
+RUN curl -fsSL https://deno.land/install.sh | sh
 
-ENV PATH=${DENO_INSTALL}/bin:${PATH} \
-    DENO_DIR=${DENO_INSTALL}/.cache/deno
-
-# [Optional] Uncomment this section to install additional OS packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#    && apt-get -y install --no-install-recommends <your-package-list-here>
+WORKDIR /deno
