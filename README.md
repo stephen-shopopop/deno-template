@@ -1,8 +1,5 @@
 [![Minimal deno version](https://img.shields.io/static/v1?label=deno&message=%3E=1.31.1&color)](https://deno.land/manual@v1.31.1/getting_started)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/stephen-shopopop/deno-template/graphs/commit-activity)
-[![Linux](https://svgshare.com/i/Zhy.svg)](https://svgshare.com/i/Zhy.svg)
-[![macOS](https://svgshare.com/i/ZjP.svg)](https://svgshare.com/i/ZjP.svg)
-[![Visual Studio Code](https://img.shields.io/badge/--007ACC?logo=visual%20studio%20code&logoColor=ffffff)](https://code.visualstudio.com/)
 [![Deno](https://github.com/stephen-shopopop/deno-template/actions/workflows/deno.yml/badge.svg)](https://github.com/stephen-shopopop/deno-template/actions/workflows/deno.yml)
 [![Changelog](https://github.com/stephen-shopopop/deno-template/actions/workflows/release.yml/badge.svg)](https://github.com/stephen-shopopop/deno-template/actions/workflows/release.yml)
 
