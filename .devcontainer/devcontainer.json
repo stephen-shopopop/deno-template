@@ -1,10 +1,10 @@
 {
   "name": "Deno",
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "feature": {
-    "ghcr.io/devcontainers-community/features/deno:1": {
-      "version": "latest"
-    }
+  "build": {
+    "dockerfile": "Dockerfile",
+    // Update 'VARIANT' to pick an Debian OS version: bullseye, buster
+    "args": {
+      "VARIANT": "bullseye"
   },
 
   // Configure tool-specific properties.
