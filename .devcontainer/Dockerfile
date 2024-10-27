@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/typescript-node:22
+FROM mcr.microsoft.com/devcontainers/typescript-node:20
 
 # Install Deno
 ENV DENO_INSTALL=/usr/local
