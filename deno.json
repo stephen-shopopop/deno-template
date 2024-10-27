@@ -1,4 +1,5 @@
 {
+  "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
   "tasks": {
     "start": "deno run --allow-env --allow-run mod.ts",
     "dev": "deno run --allow-all --unstable mod.ts",
