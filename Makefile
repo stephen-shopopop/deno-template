@@ -4,7 +4,6 @@ VERSION		 ?= $(shell cat $(PWD)/.version 2> /dev/null || echo v0)
 
 # Deno commands
 DENO    = deno
-BUNDLE  = $(DENO) bundle
 RUN     = $(DENO) run
 TEST    = $(DENO) test
 FMT     = $(DENO) fmt
@@ -14,9 +13,9 @@ DEPS    = $(DENO) info
 DOCS    = $(DENO) doc mod.ts --json
 INSPECT = $(DENO) run --inspect-brk
 
-DENOVERSION = 1.46.3
+DENOVERSION = 2.0.3
 
-.PHONY: help clean deno-install install deno-version deno-upgrade check fmt dev env test bundle build inspect doc all release
+.PHONY: help clean deno-install install deno-version deno-upgrade check fmt dev env test build inspect doc all release
 
 default: help
 
@@ -57,12 +56,8 @@ test: ## deno run test
 
 install:
 	@(DENO) install .
-
-bundle: ## deno build bundle
-	@$(BUNDLE) mod.ts module.bundle.js
 	
-clean: ## clean bundle and binary
-	rm -f module.bundle.js
+clean: ## clean binary
 	rm -fr bin
 
 build: ## deno build binary
