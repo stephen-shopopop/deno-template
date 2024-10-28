@@ -3,7 +3,7 @@
 /**
  * Adds x and y.
  *
- * # Examples
+ * # Examples add(1, 2)
  *
  * ```ts
  * import { assertEquals } from "jsr:@std/assert/equals";
@@ -16,4 +16,4 @@ export function add(x: number, y: number): number {
   return x + y
 }
 
-console.log(add(9, 5))
+console.log(add(1, 2))

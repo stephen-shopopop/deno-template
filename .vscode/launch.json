@@ -8,10 +8,10 @@
       "request": "launch",
       "name": "Launch Program",
       "type": "node",
-      "program": "${workspaceFolder}/mod.ts",
+      "program": "${workspaceFolder}/main.ts",
       "cwd": "${workspaceFolder}",
       "env": {},
-      "runtimeExecutable": "/usr/local/bin/deno",
+      "runtimeExecutable": "deno",
       "runtimeArgs": [
         "run",
         "--unstable",
