@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Module - Documentation</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="Service kyc - Documentation" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css"
+    />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      window.$docsify = {
+        coverpage: true,
+        name: 'My Module',
+        loadSidebar: true,
+        autoHeader: true,
+        repo: '',
+        mermaidConfig: {
+          querySelector: '.mermaid',
+        },
+        tabs: {
+          persist: true,
+          sync: false,
+          theme: 'classic',
+          tabComments: true,
+          tabHeadings: true,
+        },
+      }
+    </script>
+    <!-- Docsify v4 -->
+    <script src="https://cdn.jsdelivr.net/npm/docsify@4"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"
+    ></script>
+    <!-- docsify-tabs (latest v1.x.x) -->
+    <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1"></script>
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs'
+      mermaid.initialize({ startOnLoad: true })
+      window.mermaid = mermaid
+    </script>
+    <script
+      src="https://unpkg.com/docsify-mermaid@2.0.1/dist/docsify-mermaid.js"
+    ></script>
+  </body>
+</html>

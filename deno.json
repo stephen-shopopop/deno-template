@@ -6,8 +6,8 @@
     "dev": "deno run --allow-all --unstable main.ts",
     "test": "deno test --doc --parallel --coverage && deno coverage",
     "check": "deno fmt --check && deno lint --unstable && deno task test",
-    "doc": "deno doc --lint mod.ts && deno doc --html --name='My Project' main.ts",
-    "server": "deno run --allow-read --allow-net jsr:@std/http/file-server ./docs",
+    "doc": "deno doc --lint main.ts && deno doc --html --name='My Project' main.ts",
+    "server": "deno run --allow-read --allow-net --allow-sys=networkInterfaces jsr:@std/http/file-server --no-dotfiles -p=0",
     "clean": "rm -rf ./docs && rm -rf ./coverage"
   },
   "unstable": ["cron", "kv"],
@@ -15,6 +15,6 @@
     "proseWrap": "preserve",
     "semiColons": false,
     "singleQuote": true,
-    "exclude": ["CHANGELOG.md", "notebook/"]
+    "exclude": ["CHANGELOG.md", "notebook/", "www/"]
   }
 }

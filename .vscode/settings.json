@@ -2,6 +2,7 @@
   "deno.enable": true,
   "deno.lint": true,
   "deno.unstable": true,
+  "deno.documentPreloadLimit": 2000,
   "deno.codeLens.implementations": true,
   "deno.codeLens.references": true,
   "deno.codeLens.referencesAllFunctions": true,
@@ -40,5 +41,9 @@
   "errorLens.gutterIconsEnabled": true,
   "errorLens.gutterIconSet": "borderless",
   "errorLens.followCursor": "activeLine",
-  "editor.acceptSuggestionOnEnter": "on"
+  "editor.acceptSuggestionOnEnter": "on",
+  "cSpell.words": [
+    "Deno",
+    "docsify"
+  ]
 }

@@ -1,14 +1,13 @@
-[![Minimal deno version](https://img.shields.io/static/v1?label=deno&message=%3E=1.31.1&color)](https://deno.land/manual@v1.31.1/getting_started)
+[![Minimal deno version](https://img.shields.io/static/v1?label=deno&message=%3E=2.0.3&color)](https://docs.deno.com/runtime/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/stephen-shopopop/deno-template/graphs/commit-activity)
 [![Deno](https://github.com/stephen-shopopop/deno-template/actions/workflows/deno.yml/badge.svg)](https://github.com/stephen-shopopop/deno-template/actions/workflows/deno.yml)
 [![Changelog](https://github.com/stephen-shopopop/deno-template/actions/workflows/release.yml/badge.svg)](https://github.com/stephen-shopopop/deno-template/actions/workflows/release.yml)
 
-# deno template
+# Deno template
 
 [Installation deno](https://deno.land/#installation)
 
 - [Documentation](https://doc.deno.land/https://raw.githubusercontent.com/stephen-shopopop/deno-template/main/mod.ts)
-- [cheat code](https://oscarotero.com/deno/?utm_source=denonews&utm_medium=email)
 
 ## Usage
 
