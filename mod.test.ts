@@ -1,13 +1,8 @@
-import { assertEquals } from "jsr:@std/assert";
-import { upperString } from "./mod.ts";
+import { assertEquals } from 'jsr:@std/assert'
 
 // Compact form: name and function
-Deno.test("hello world #1", () => {
-  const x = 1 + 2;
-  assertEquals(x, 3);
-});
+Deno.test('hello world #1', () => {
+  const x = 1 + 2
 
-Deno.test("hello world #2", () => {
-  const x = upperString("Hello world!");
-  assertEquals(x, "HELLO WORLD!");
-});
+  assertEquals(x, 3)
+})

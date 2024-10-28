@@ -55,6 +55,7 @@ test: ## deno run test
 	@$(TEST) --coverage=cov_profile
 
 install:
+	@(DENO) jupyter --unstable --install
 	@(DENO) install .
 	
 clean: ## clean binary

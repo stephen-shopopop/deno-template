@@ -3,12 +3,16 @@
   "tasks": {
     "start": "deno run --allow-env --allow-run mod.ts",
     "dev": "deno run --allow-all --unstable mod.ts",
-    "test": "deno test",
-    "check": "deno task lint && deno task fmt:check",
-    "fmt:check": "deno fmt --check",
-    "fmt": "deno fmt",
-    "lint": "deno lint --unstable",
-    "fileserver": "deno run --allow-read --allow-net jsr:@std/http/file-server ."
+    "test": "deno test --doc --parallel --coverage && deno coverage",
+    "check": "deno fmt --check && deno lint --unstable",
+    "doc": "deno doc --lint mod.ts && deno doc --html --name='My Module' mod.ts",
+    "server": "deno run --allow-read --allow-net jsr:@std/http/file-server ./docs",
+    "clean": "rm -rf ./docs && rm -rf ./coverage"
   },
-  "unstable": ["cron", "kv"]
+  "unstable": ["cron", "kv"],
+  "fmt": {
+    "proseWrap": "preserve",
+    "semiColons": false,
+    "singleQuote": true
+  }
 }
