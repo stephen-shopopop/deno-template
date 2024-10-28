@@ -13,6 +13,7 @@
   "fmt": {
     "proseWrap": "preserve",
     "semiColons": false,
-    "singleQuote": true
+    "singleQuote": true,
+    "exclude": ["CHANGELOG.md"]
   }
 }
