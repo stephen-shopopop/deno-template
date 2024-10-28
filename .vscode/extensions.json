@@ -1,9 +1,47 @@
 {
   "recommendations": [
     "denoland.vscode-deno",
-    "eamodio.gitlens",
-    "aaron-bond.better-comments",
     "nicoespeon.abracadabra",
-    "mutantdino.resourcemonitor"
+    // Code quality
+    "aaron-bond.better-comments",
+    "kisstkondoros.vscode-codemetrics",
+    "SonarSource.sonarlint-vscode",
+    "streetsidesoftware.code-spell-checker",
+    // Docker
+    "ms-vscode-remote.remote-containers",
+    "ms-azuretools.vscode-docker",
+    // Documentation
+    "42Crunch.vscode-openapi",
+    "arjun.swagger-viewer",
+    "asyncapi.asyncapi-preview",
+    // Markdown
+    "DavidAnson.vscode-markdownlint",
+    "yzhang.markdown-all-in-one",
+    "bierner.markdown-mermaid",
+    // Github
+    "github.vscode-pull-request-github",
+    "vivaxy.vscode-conventional-commits",
+    "eamodio.gitlens",
+    "usernamehw.errorlens",
+    "github.vscode-github-actions",
+    // Theme
+    "chadalen.vscode-jetbrains-icon-theme",
+    "qvist.jetbrains-new-ui-dark-theme",
+    // Tools
+    "mutantdino.resourcemonitor",
+    "fabiospampinato.vscode-open-in-github",
+    "antfu.open-in-github-button",
+    "quicktype.quicktype",
+    "gruntfuggly.todo-tree",
+    "antfu.array-index-inlay",
+    // Http client
+    "rangav.vscode-thunder-client",
+    // Database
+    "cweijan.dbclient-jdbc",
+    // Env file
+    "mikestead.dotenv",
+    // For me
+    "ms-ceintl.vscode-language-pack-fr",
+    "ms-toolsai.jupyter"
   ]
 }
