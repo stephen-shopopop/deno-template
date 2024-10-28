@@ -62,8 +62,8 @@ test: ## deno run test
 
 .PHONY: install
 install:
-	@(DENO) jupyter --unstable --install
-	@(DENO) install .
+	@$(DENO) jupyter --unstable --install
+	@$(DENO) install
 
 .PHONY:clean
 clean: ## clean binary
@@ -78,7 +78,7 @@ build: ## deno build binary
 	$(BUILD) --output=bin/${NAME}_darwin_x86_64 --target=x86_64-apple-darwin -A --unstable main.ts
 	$(BUILD) --output=bin/${NAME}_darwin_aarch64 --target=x86_64-apple-darwin -A --unstable main.ts
 
-.PHONY: deno-inspect
+.PHONY: inspect
 inspect: ## deno inspect 
 	@echo "Open chrome & chrome://inspect"
 	$(INSPECT) --allow-all --unstable main.ts
