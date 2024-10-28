@@ -15,6 +15,6 @@
     "proseWrap": "preserve",
     "semiColons": false,
     "singleQuote": true,
-    "exclude": ["CHANGELOG.md", "notebook/", "www/"]
+    "exclude": ["CHANGELOG.md", "notebook/"]
   }
 }
