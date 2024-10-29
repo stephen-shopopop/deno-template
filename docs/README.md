@@ -7,7 +7,7 @@
 
 ## Drive contract
 
-- <a href="/scalar.html" target="_blank" rel="noopener">openapi</a>
+- <a href="./scalar.html" target="_blank" rel="noopener">openapi</a>
 
 ### Architecture
 
