@@ -7,7 +7,7 @@
 
 [Installation deno](https://deno.land/#installation)
 
-- [Documentation](https://doc.deno.land/https://raw.githubusercontent.com/stephen-shopopop/deno-template/main/mod.ts)
+- [Documentation](https://doc.deno.land/https://raw.githubusercontent.com/stephen-shopopop/deno-template/main/main.ts)
 
 ## Usage
 
