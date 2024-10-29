@@ -44,6 +44,8 @@
   "editor.acceptSuggestionOnEnter": "on",
   "cSpell.words": [
     "Deno",
+    "denoland",
+    "devcontainers",
     "docsify"
   ]
 }
