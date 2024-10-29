@@ -55,7 +55,7 @@ console.log(singleton.someBusinessLogic()) // dark
 
 ## Prototype
 
-Prototype allows objects to be clones of other objects, rather then extended via inheritance.
+Prototype allows objects to be clones of other objects, rather than extended via inheritance.
 
 ```ts ignore
 const zombie = Object.seal({
@@ -120,10 +120,10 @@ The builder pattern is a creational design pattern that lets you construct compl
 class HotDog {
   constructor(
     readonly bread: string,
-    ketchup?: boolean
-    mustard?: boolean
-    kraut?: boolean
-  ) { /** */ }
+    ketchup?: boolean,
+    mustard?: boolean,
+    kraut?: boolean,
+  ) {/** */}
 
   addKetchup() {
     this.ketchup = true
@@ -147,5 +147,5 @@ const myLunch = new HotDog('gluten free')
   .addMustard()
   .addKraut()
 
-console.log(myLunch) // { ketchup: true, mustard: true, kraut: true, bread: 'gluten free' }
+console.log(myLunch) // { ketchup: true, mustard: true, kraut: true, bread: 'gluten free' }
 ```

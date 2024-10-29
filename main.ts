@@ -3,7 +3,7 @@
 /**
  * Adds x and y.
  *
- * # Examples add(1, 2)
+ * # Examples
  *
  * ```ts
  * import { assertEquals } from "jsr:@std/assert/equals";
