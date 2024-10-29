@@ -6,9 +6,10 @@
     "dev": "deno run --allow-all --unstable main.ts",
     "test": "deno test --doc --parallel --coverage && deno coverage",
     "check": "deno fmt --check && deno lint --unstable && deno task test",
-    "doc": "deno doc --lint main.ts && deno doc --html --name='My Project' main.ts",
+    "doc": "deno doc --lint main.ts && deno doc --html --name='My Project' --output=documentations main.ts",
+    "docs": "deno run -A npm:docsify-cli serve docs --port 0",
     "server": "deno run --allow-read --allow-net --allow-sys=networkInterfaces jsr:@std/http/file-server --no-dotfiles -p=0",
-    "clean": "rm -rf ./docs && rm -rf ./coverage"
+    "clean": "rm -rf ./documentations && rm -rf ./coverage"
   },
   "unstable": ["cron", "kv"],
   "fmt": {
@@ -16,5 +17,6 @@
     "semiColons": false,
     "singleQuote": true,
     "exclude": ["CHANGELOG.md", "notebook/"]
-  }
+  },
+  "exclude": ["documentations/"]
 }

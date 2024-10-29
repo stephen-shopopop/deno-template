@@ -5,10 +5,6 @@
 
 ## Description
 
-## Reference
-
-<a href="/doc/index.html" target="_blank" rel="noopener">openapi</a>
-
 ## Drive contract
 
 - <a href="/scalar.html" target="_blank" rel="noopener">openapi</a>
