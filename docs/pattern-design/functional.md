@@ -65,7 +65,7 @@ import { assertEquals } from 'jsr:@std/assert/equals'
 
 type Handle<T> = (value: T) => T
 
-export function compose<T>(...functions: Array<Handle<T>>): Handle<T> {
+function compose<T>(...functions: Array<Handle<T>>): Handle<T> {
   return (arg: T): T =>
     functions
       .reduce((prev, currentFn) => currentFn(prev), arg)
@@ -79,6 +79,56 @@ const sanitize = compose<string>(
 assertEquals(sanitize(' jean '), 'Jean')
 ```
 
+Variant
+
+```ts
+import { assertEquals } from 'jsr:@std/assert/equals'
+
+type Handle<T> = (value: T) => Promise<T> | T
+
+export function compose<T>(
+  ...functions: Array<Handle<T>>
+): Handle<T> {
+  return async (arg: T) => {
+    let acc: T = arg
+
+    for (const fn of functions) {
+      acc = await fn(acc)
+    }
+
+    return acc
+  }
+}
+
+// Async usage
+const sanitizeName = await compose<string>(
+  (value) => value.trim(),
+  (value) => value.replace('j', 'J'),
+  (value) => Promise.resolve(`${value}!`),
+)(' jean ')
+
+assertEquals(sanitizeName, 'Jean!')
+
+type User = {
+  name: string
+  id: number
+}
+
+// Object usage
+const user = await compose<User>(
+  (user) => ({
+    ...user,
+    name: user.name.trim(),
+  }),
+  ({ name, id }) => ({
+    id,
+    name: `${name}!`,
+  }),
+)({ name: '  jean  ', id: 1 })
+
+assertEquals(user, { name: 'jean!', id: 1 })
+```
+
 ## Use case
 
 Use [use-case pattern](https://practica.dev/blog/about-the-sweet-and-powerful-use-case-code-pattern)
@@ -86,7 +136,7 @@ Use [use-case pattern](https://practica.dev/blog/about-the-sweet-and-powerful-us
 ```ts
 import { assertEquals } from 'jsr:@std/assert/equals'
 
-export async function runUseCaseStep<T>(
+async function runUseCaseStep<T>(
   stepName: string,
   stepFunction: () => Promise<T> | T,
 ): Promise<Awaited<T>> {
@@ -107,4 +157,79 @@ function multiply(value: number) {
 const res = await runUseCaseStep('Multiply', multiply.bind(null, 2))
 
 assertEquals(res, 4)
+```
+
+## Sequence with either
+
+```ts
+import { assertEquals } from 'jsr:@std/assert/equals'
+
+interface Left<A> {
+  value: A
+  tag: 'left'
+}
+
+interface Right<B> {
+  value: B
+  tag: 'right'
+}
+
+export type Either<A, B> = Left<A> | Right<B>
+
+export function isLeft<A, B>(val: Either<A, B>): val is Left<A> {
+  return val.tag === 'left'
+}
+
+export function isRight<A, B>(val: Either<A, B>): val is Right<B> {
+  return val.tag === 'right'
+}
+
+export function Left<A>(val: A): Left<A> {
+  return Object.freeze({ tag: 'left', value: val })
+}
+
+export function Right<B>(val: B): Right<B> {
+  return Object.freeze({ tag: 'right', value: val })
+}
+
+type Handle<U, T> = (value: T) => Promise<Either<U, T>> | Either<U, T>
+
+export function sequence<U, T>(
+  ...functions: Array<Handle<U, T>>
+) {
+  return async (arg: T): Promise<Left<U> | Right<T>> => {
+    let acc: T = arg
+
+    for (const fn of functions) {
+      const res = await fn(acc)
+
+      if (isLeft(res)) {
+        return res
+      }
+
+      acc = res.value
+    }
+
+    return Right(acc)
+  }
+}
+
+// Example 1
+const lastName = await sequence<string, string>(
+  (lastName) => Right(lastName.trim()),
+  () => Left('error'),
+  (lastName) => Right(`${lastName}!`),
+)(' jean ')
+
+assertEquals(isLeft(lastName), true)
+assertEquals(lastName.value, 'error')
+
+// Example 2
+const firstName = await sequence<string, string>(
+  (firstName) => Right(firstName.trim()),
+  (firstName) => Right(`${firstName}!`),
+)(' jean ')
+
+assertEquals(isRight(firstName), true)
+assertEquals(firstName.value, 'jean!')
 ```
