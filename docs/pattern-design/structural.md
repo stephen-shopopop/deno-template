@@ -106,13 +106,13 @@ class BookBuilder {
 
   #bookList: Array<Book & { availability: boolean; sales: number }> = []
 
-  createBook(title: string, author: string, isbn: string) {
-    const existingBook = this.#books.has(isbn)
+  #createBook(title: string, author: string, isbn: string) {
+    const existingBook = this.#books.get(isbn)
 
     if (existingBook) {
       console.log('Book exist!')
 
-      return this.#books.get(isbn) as Book
+      return existingBook
     }
 
     const book = new Book(title, author, isbn)
@@ -131,7 +131,7 @@ class BookBuilder {
     sales: number,
   ) {
     const book = {
-      ...this.createBook(title, author, isbn),
+      ...this.#createBook(title, author, isbn),
       availability,
       sales,
     }
