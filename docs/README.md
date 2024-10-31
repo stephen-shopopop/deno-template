@@ -10,5 +10,3 @@
 - <a href="./scalar.html" target="_blank" rel="noopener">openapi</a>
 
 ### Architecture
-
-Use [use-case pattern](https://practica.dev/blog/about-the-sweet-and-powerful-use-case-code-pattern)

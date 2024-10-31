@@ -11,3 +11,4 @@
   - [Creational](./pattern-design/creational.md)
   - [Structural](./pattern-design/structural.md)
   - [Behavioral](./pattern-design/behavioral.md)
+  - [FP pattern](./pattern-design/functional.md)
