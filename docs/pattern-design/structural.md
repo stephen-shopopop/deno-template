@@ -86,3 +86,64 @@ const bigBrother = new Proxy(personn, {
 bigBrother.name // Tracking key: "name"
 bigBrother.name = 'bob' // Updating key: "name" with value: "bob"
 ```
+
+## Flyweight
+
+The flyweight pattern is a useful way to conserve memory when we’re creating a large number of similar objects.
+
+```ts ignore
+class Book {
+  constructor(
+    public title: string,
+    public author: string,
+    public isbn: string,
+  ) {
+  }
+}
+
+class BookBuilder {
+  #books = new Map<string, Book>()
+
+  #bookList: Array<Book & { availability: boolean; sales: number }> = []
+
+  createBook(title: string, author: string, isbn: string) {
+    const existingBook = this.#books.has(isbn)
+
+    if (existingBook) {
+      console.log('Book exist!')
+
+      return this.#books.get(isbn) as Book
+    }
+
+    const book = new Book(title, author, isbn)
+    this.#books.set(isbn, book)
+
+    console.log('Book created!')
+
+    return book
+  }
+
+  addBook(
+    title: string,
+    author: string,
+    isbn: string,
+    availability: boolean,
+    sales: number,
+  ) {
+    const book = {
+      ...this.createBook(title, author, isbn),
+      availability,
+      sales,
+    }
+
+    this.#bookList.push(book)
+
+    return book
+  }
+}
+
+const library = new BookBuilder()
+
+library.addBook('Harry Potter', 'JK Rowling', 'AB123', false, 100) // Book created!
+library.addBook('Harry Potter', 'JK Rowling', 'AB123', true, 50) // Book exist!
+```
