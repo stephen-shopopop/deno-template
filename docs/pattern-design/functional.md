@@ -12,13 +12,13 @@ We can now separate a technical error from a business error. A technical error w
 import { assertEquals } from 'jsr:@std/assert/equals'
 
 interface Left<A> {
-  value: A
-  tag: 'left'
+  readonly value: A
+  readonly tag: 'left'
 }
 
 interface Right<B> {
-  value: B
-  tag: 'right'
+  readonly value: B
+  readonly tag: 'right'
 }
 
 export type Either<A, B> = Left<A> | Right<B>
@@ -32,11 +32,11 @@ export function isRight<A, B>(val: Either<A, B>): val is Right<B> {
 }
 
 export function Left<A>(val: A): Left<A> {
-  return Object.freeze({ tag: 'left', value: val })
+  return { tag: 'left', value: val }
 }
 
 export function Right<B>(val: B): Right<B> {
-  return Object.freeze({ tag: 'right', value: val })
+  return { tag: 'right', value: val }
 }
 
 function add(value?: number): Either<null, number> {
@@ -136,42 +136,14 @@ Use [use-case pattern](https://practica.dev/blog/about-the-sweet-and-powerful-us
 ```ts
 import { assertEquals } from 'jsr:@std/assert/equals'
 
-async function runUseCaseStep<T>(
-  stepName: string,
-  stepFunction: () => Promise<T> | T,
-): Promise<Awaited<T>> {
-  console.debug(`Use case step ${stepName} starts now.`)
-
-  // Execute step function
-  const res = await stepFunction()
-
-  console.debug(`Use case step ${stepName} executed now.`)
-
-  return res
-}
-
-function multiply(value: number) {
-  return value * 2
-}
-
-const res = await runUseCaseStep('Multiply', multiply.bind(null, 2))
-
-assertEquals(res, 4)
-```
-
-## Sequence with either
-
-```ts
-import { assertEquals } from 'jsr:@std/assert/equals'
-
 interface Left<A> {
-  value: A
-  tag: 'left'
+  readonly value: A
+  readonly tag: 'left'
 }
 
 interface Right<B> {
-  value: B
-  tag: 'right'
+  readonly value: B
+  readonly tag: 'right'
 }
 
 export type Either<A, B> = Left<A> | Right<B>
@@ -185,51 +157,117 @@ export function isRight<A, B>(val: Either<A, B>): val is Right<B> {
 }
 
 export function Left<A>(val: A): Left<A> {
-  return Object.freeze({ tag: 'left', value: val })
+  return { tag: 'left', value: val }
 }
 
 export function Right<B>(val: B): Right<B> {
-  return Object.freeze({ tag: 'right', value: val })
+  return { tag: 'right', value: val }
 }
 
-type Handle<U, T> = (value: T) => Promise<Either<U, T>> | Either<U, T>
+async function runUseCaseStep<T, U>(
+  stepName: string,
+  stepFunction: () => Promise<Either<T, U>> | Either<T, U>,
+): Promise<Awaited<Either<T, U>>> {
+  console.debug(`Use case step ${stepName} starts now.`)
 
-export function sequence<U, T>(
-  ...functions: Array<Handle<U, T>>
+  // Execute step function
+  const res = await stepFunction()
+
+  console.debug(`Use case step ${stepName} executed now.`)
+
+  return res
+}
+
+function multiply(value: number) {
+  return Right(value * 2)
+}
+
+const res = await runUseCaseStep('Multiply', multiply.bind(null, 2))
+
+assertEquals(isRight(res), true)
+assertEquals(res.value, 4)
+```
+
+## Flow with either and runUseCaseStep
+
+```ts
+import { assertEquals } from 'jsr:@std/assert/equals'
+
+// Either
+interface Left<A> {
+  readonly value: A
+  readonly tag: 'left'
+}
+
+interface Right<B> {
+  readonly value: B
+  readonly tag: 'right'
+}
+
+export type Either<A, B> = Left<A> | Right<B>
+
+export function isLeft<A, B>(val: Either<A, B>): val is Left<A> {
+  return val.tag === 'left'
+}
+
+export function isRight<A, B>(val: Either<A, B>): val is Right<B> {
+  return val.tag === 'right'
+}
+
+export function Left<A>(val: A): Left<A> {
+  return { tag: 'left', value: val }
+}
+
+export function Right<B>(val: B): Right<B> {
+  return { tag: 'right', value: val }
+}
+
+// Run use case step
+async function runUseCaseStep<T, U>(
+  stepName: string,
+  stepFunction: () => Promise<Either<T, U>> | Either<T, U>,
+): Promise<Awaited<Either<T, U>>> {
+  console.debug(`Use case step ${stepName} starts now.`)
+
+  // Execute step function
+  const res = await stepFunction()
+
+  console.debug(`Use case step ${stepName} executed now.`)
+
+  return res
+}
+
+// Flow
+export function flow<U, T>(
+  ...functions: Array<(value: T) => Promise<Either<U, T>> | Either<U, T>>
 ) {
   return async (arg: T): Promise<Left<U> | Right<T>> => {
-    let acc: T = arg
+    let acc = Right(arg)
 
     for (const fn of functions) {
-      const res = await fn(acc)
+      const res = await fn(acc.value)
 
       if (isLeft(res)) {
         return res
       }
 
-      acc = res.value
+      acc = res
     }
 
-    return Right(acc)
+    return acc
   }
 }
 
-// Example 1
-const lastName = await sequence<string, string>(
-  (lastName) => Right(lastName.trim()),
-  () => Left('error'),
-  (lastName) => Right(`${lastName}!`),
+// Example
+const sanitizeName = (value: string) => Right(value.trim())
+const addSuffix = (value: string) => Right(`${value}!`)
+
+const lastName = await flow(
+  (lastName: string) =>
+    runUseCaseStep('SanitizeName', sanitizeName.bind(null, lastName)),
+  (lastName) => runUseCaseStep('AddSuffix', addSuffix.bind(null, lastName)),
 )(' jean ')
 
-assertEquals(isLeft(lastName), true)
-assertEquals(lastName.value, 'error')
-
-// Example 2
-const firstName = await sequence<string, string>(
-  (firstName) => Right(firstName.trim()),
-  (firstName) => Right(`${firstName}!`),
-)(' jean ')
-
-assertEquals(isRight(firstName), true)
-assertEquals(firstName.value, 'jean!')
+assertEquals(isRight(lastName), true)
+assertEquals(lastName.value, 'jean!')
 ```
