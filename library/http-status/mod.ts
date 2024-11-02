@@ -1,21 +1,34 @@
 import { STATUS_CODES } from 'node:http'
 
 /**
+ * @module
+ *
  * Contains the object which contains standard HTTP
  * status codes and provides several type guards for handling status codes
  * with type safety.
  *
- * @example The status code and status text
+ * @example The HTTPStatus and httpStatusText
  * ```ts
- * import { assertEquals } from 'jsr:@std/assert/equals'
+ * import { assertEquals } from 'jsr:@std/assert/equals';
  *
  * import {
  *   HTTPStatus,
  *   httpStatusText
- * } from "@oneday/http-status";
+ * } from "jsr:@oneday/http-status";
  *
- * assertEquals(HTTPStatus.NotFound, 404)
- * assertEquals(httpStatusText(404), 'NotFound')
+ * assertEquals(HTTPStatus.NotFound, 404);
+ * assertEquals(httpStatusText(404), 'NotFound');
+ * ```
+ */
+
+/**
+ * # Example
+ *
+ * ```ts
+ * import { assertEquals } from 'jsr:@std/assert/equals';
+ * import { HTTPStatus } from "jsr:@oneday/http-status";
+ *
+ * assertEquals(HTTPStatus.NotFound, 404);
  * ```
  */
 export enum HTTPStatus {
@@ -149,5 +162,16 @@ export enum HTTPStatus {
   NetworkAuthenticationRequired = 511,
 }
 
-export const httpStatusText = (HTTPStatus: number): string =>
-  STATUS_CODES[HTTPStatus] ?? 'Unknown error'
+/**
+ * # Example
+ *
+ * ```ts
+ * import { assertEquals } from 'jsr:@std/assert/equals';
+ * import { httpStatusText } from "jsr:@oneday/http-status";
+ *
+ * assertEquals(httpStatusText(404), 'NotFound');
+ * assertEquals(httpStatusText(0), 'UnknownError');
+ * ```
+ */
+export const httpStatusText = (HTTPStatus: HTTPStatus | number): string =>
+  STATUS_CODES[HTTPStatus] ?? 'UnknownError'
