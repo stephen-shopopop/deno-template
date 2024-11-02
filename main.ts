@@ -1,5 +1,5 @@
 #!/usr/bin/env deno run --allow-env --allow-run
-import { HTTPStatus } from '@scope/http-status'
+import { HTTPStatus } from '@library/http-status'
 
 /**
  * Adds x and y.

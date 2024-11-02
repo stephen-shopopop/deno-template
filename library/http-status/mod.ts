@@ -12,7 +12,7 @@ import { STATUS_CODES } from 'node:http'
  * import {
  *   HTTPStatus,
  *   httpStatusText
- * } from "@scope/http-status";
+ * } from "@library/http-status";
  *
  * assertEquals(HTTPStatus.NotFound, 404)
  * assertEquals(httpStatusText(404), 'NotFound')
