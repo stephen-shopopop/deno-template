@@ -19,5 +19,5 @@
     "exclude": ["CHANGELOG.md", "notebook/"]
   },
   "exclude": ["documentations/"],
-  "workspace": ["./library/http-status"]
+  "workspace": ["./library/http-status", "./library/either"]
 }
