@@ -18,5 +18,6 @@
     "singleQuote": true,
     "exclude": ["CHANGELOG.md", "notebook/"]
   },
-  "exclude": ["documentations/"]
+  "exclude": ["documentations/"],
+  "workspace": ["./library/http-status"]
 }

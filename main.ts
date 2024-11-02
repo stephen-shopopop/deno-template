@@ -1,4 +1,5 @@
 #!/usr/bin/env deno run --allow-env --allow-run
+import { HTTPStatus } from '@scope/http-status'
 
 /**
  * Adds x and y.
@@ -17,3 +18,5 @@ export function add(x: number, y: number): number {
 }
 
 console.log(add(1, 2))
+
+console.log(HTTPStatus.OK)
