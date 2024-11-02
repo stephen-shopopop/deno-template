@@ -12,7 +12,7 @@ import { STATUS_CODES } from 'node:http'
  * import {
  *   HTTPStatus,
  *   httpStatusText
- * } from "@library/http-status";
+ * } from "@oneday/http-status";
  *
  * assertEquals(HTTPStatus.NotFound, 404)
  * assertEquals(httpStatusText(404), 'NotFound')
