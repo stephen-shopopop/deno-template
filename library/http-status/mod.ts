@@ -10,7 +10,6 @@ import { STATUS_CODES } from 'node:http'
  * @example The HTTPStatus and httpStatusText
  * ```ts
  * import { assertEquals } from 'jsr:@std/assert/equals';
- *
  * import {
  *   HTTPStatus,
  *   httpStatusText

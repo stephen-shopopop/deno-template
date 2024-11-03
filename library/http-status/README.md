@@ -1,4 +1,4 @@
-# Library
+# Library http-status
 
 [![JSR @oneday](https://jsr.io/badges/@oneday)](https://jsr.io/@oneday/http-status)
 
