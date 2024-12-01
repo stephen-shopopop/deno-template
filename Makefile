@@ -13,7 +13,7 @@ DEPS    = $(DENO) info
 DOCS    = $(DENO) doc main.ts --json
 INSPECT = $(DENO) run --inspect-brk
 
-DENOVERSION = 2.0.3
+DENOVERSION = 2.1.2
 
 default: help
 

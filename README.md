@@ -1,4 +1,4 @@
-[![Minimal deno version](https://img.shields.io/static/v1?label=deno&message=%3E=2.0.3&color)](https://docs.deno.com/runtime/)
+[![Minimal deno version](https://img.shields.io/static/v1?label=deno&message=%3E=2.1.2&color)](https://docs.deno.com/runtime/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/stephen-shopopop/deno-template/graphs/commit-activity)
 [![Deno](https://github.com/stephen-shopopop/deno-template/actions/workflows/deno.yml/badge.svg)](https://github.com/stephen-shopopop/deno-template/actions/workflows/deno.yml)
 [![Changelog](https://github.com/stephen-shopopop/deno-template/actions/workflows/release.yml/badge.svg)](https://github.com/stephen-shopopop/deno-template/actions/workflows/release.yml)
@@ -15,7 +15,15 @@
 deno run --allow-env --allow-run mod.ts
 ```
 
+Deno all commands
+
+> deno --help
+
 ### Tasks (unstable)
+
+List all tasks
+
+> deno task
 
 ```bash
 1. deno task start
