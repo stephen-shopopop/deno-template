@@ -72,11 +72,11 @@ clean: ## clean binary
 .PHONY: build
 build: ## deno build binary
 	rm -f bin/*
-	$(BUILD) --output=bin/${NAME} -A --unstable main.ts
-	$(BUILD) --output=bin/${NAME}.exe --target=x86_64-pc-windows-msvc -A --unstable main.ts
-	$(BUILD) --output=bin/${NAME}_x86_64 --target=x86_64-unknown-linux-gnu -A --unstable main.ts
-	$(BUILD) --output=bin/${NAME}_darwin_x86_64 --target=x86_64-apple-darwin -A --unstable main.ts
-	$(BUILD) --output=bin/${NAME}_darwin_aarch64 --target=x86_64-apple-darwin -A --unstable main.ts
+	$(BUILD) --output=bin/${NAME} -A main.ts
+	$(BUILD) --output=bin/${NAME}.exe --target=x86_64-pc-windows-msvc -A main.ts
+	$(BUILD) --output=bin/${NAME}_x86_64 --target=x86_64-unknown-linux-gnu -A main.ts
+	$(BUILD) --output=bin/${NAME}_darwin_x86_64 --target=x86_64-apple-darwin -A main.ts
+	$(BUILD) --output=bin/${NAME}_darwin_aarch64 --target=x86_64-apple-darwin -A main.ts
 
 .PHONY: inspect
 inspect: ## deno inspect 
