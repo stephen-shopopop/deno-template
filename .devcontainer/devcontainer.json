@@ -2,7 +2,7 @@
   "name": "Deno with node",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
   "features": {
-    "ghcr.io/devcontainers-contrib/features/deno:1": {}
+    "ghcr.io/devcontainers-contrib/features/deno-asdf:2": {}
   },
 
   // Configure tool-specific properties.
