@@ -13,7 +13,7 @@ DEPS    = $(DENO) info
 DOCS    = $(DENO) doc main.ts --json
 INSPECT = $(DENO) run --inspect-brk
 
-DENOVERSION = 2.1.2
+DENO_VERSION = 2.1.4
 
 default: help
 
@@ -32,7 +32,7 @@ env: ## environment project
 
 .PHONY: deno-install
 deno-install: ## install deno version and dependencies
-	@$(DENO) upgrade --version $(DENOVERSION)
+	@$(DENO) upgrade --version $(DENO_VERSION)
 
 .PHONY: deno-version
 deno-version: ## deno version
