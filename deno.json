@@ -48,5 +48,9 @@
     "exclude": ["CHANGELOG.md", "notebook/"]
   },
   "exclude": ["documentations/"],
-  "workspace": ["./library/http-status", "./library/either"]
+  "workspace": [
+    "./library/http-status",
+    "./library/either",
+    "./library/global-context"
+  ]
 }
