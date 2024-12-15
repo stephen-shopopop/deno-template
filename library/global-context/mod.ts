@@ -17,13 +17,13 @@ type User = {
   username: string
 }
 
-interface Context {
+type Context = {
   metadata?: Metadata
   user?: Partial<User>
   requestId?: string
 }
 
-export class ContextStorage<T extends object = Record<PropertyKey, unknown>> {
+class ContextStorage<T extends object = Record<PropertyKey, unknown>> {
   readonly #currentContext: AsyncLocalStorage<T>
 
   constructor() {
@@ -134,6 +134,29 @@ export class ContextStorage<T extends object = Record<PropertyKey, unknown>> {
   }
 }
 
+/**
+ * # Example
+ *
+ * ```ts
+ * import { assertEquals } from 'jsr:@std/assert/equals'
+ * import { context } from 'jsr:@oneday/global-context'
+ *
+ * const id = crypto.randomUUID()
+ *
+ * context.run({ requestId: id }, () => {
+ *    context.set('user', { id: '1234', email: 'oneday@oneday.com' })
+ *    context.set('metadata', { message: 'hello' })
+ *
+ *    assertEquals(context.get('user'), { id: '1234', email: 'oneday@oneday.com' })
+ *    assertEquals(context.get('metadata')?.message, 'hello')
+ *    assertEquals(context.getStore(), {
+ *      user: { id: '1234', email: 'oneday@oneday.com' },
+ *      metadata: { message: 'hello' },
+ *      requestId: id,
+ *    })
+ * })
+ * ```
+ */
 export const context: ContextStorage<Partial<Context>> = new ContextStorage<
   Partial<Context>
 >()
