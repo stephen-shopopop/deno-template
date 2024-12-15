@@ -30,7 +30,7 @@ Gets all variables previously set within a running context. If this is called ou
 
 ## Basic usage
 
-```ts
+```typescript ignore
 import { assertEquals } from 'jsr:@std/assert/equals'
 import { context } from 'jsr:@oneday/global-context'
 
@@ -52,33 +52,33 @@ context.run({ requestId: id }, () => {
 
 ### http server
 
-```ts
+```typescript ignore
+import * as http from 'node:http'
 import { assertEquals } from 'jsr:@std/assert/equals'
 import { context } from 'jsr:@oneday/global-context'
 
 http.createServer((req, res) => {
-  context.runSync({}, () => {
+  context.run({}, () => {
     context.set('user', { id: 24 })
 
     assertEquals(context.getStore()?.user, { id: '1234' })
 
-    setImmediate(() => {
-      res.write(context.get('user'))
-      res.end()
-    })
+    res.write(context.get('user'))
+    res.end()
   })
 }).listen(8080)
 ```
 
 ### Handle an event
 
-```ts
+```typescript ignore
+import { EventEmitter } from 'node:events'
 import { assertEquals } from 'jsr:@std/assert/equals'
 import { context } from 'jsr:@oneday/global-context'
 
 async function handle(): Promise<void> {
   await context.run({ user: { id: 24 } }, async () => {
-    context.set('metadata', { usersTripsDeleted })
+    context.set('metadata', { message: 'hello' })
 
     await Promise.resolve()
 
