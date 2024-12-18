@@ -51,6 +51,7 @@
   "workspace": [
     "./library/http-status",
     "./library/either",
-    "./library/global-context"
+    "./library/global-context",
+    "./library/error-handling"
   ]
 }
