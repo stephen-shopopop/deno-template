@@ -52,6 +52,21 @@ describe('global-context', () => {
 
   test('When no instantiating a new context, then return undefined', () => {
     // Arrange
+    let user: unknown
+
+    // Act
+    context.run({}, () => {
+      context.set('user', { id: 1234 })
+
+      user = context.get('user')
+    })
+
+    // Assert
+    expect(user).toEqual({ id: 1234 })
+  })
+
+  test('When no instantiating a new context, then return undefined', () => {
+    // Arrange
     context.set('requestId', crypto.randomUUID())
 
     // Act

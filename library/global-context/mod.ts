@@ -6,20 +6,34 @@
 
 import { AsyncLocalStorage } from 'node:async_hooks'
 
-type Metadata = {
+/**
+ * Metadata
+ */
+export type Metadata = {
   [key: string]: unknown
+  /** Context message */
   message?: string
 }
 
-type User = {
+/**
+ * User context
+ */
+export type User = {
+  /** User unique identifier */
   id: string | number
+  /** User email */
   email: string
+  /** User name */
   username: string
 }
 
-type Context = {
+/**
+ * Context Store
+ */
+export type ContextStore = {
   metadata?: Metadata
   user?: Partial<User>
+  /** Transaction identifier */
   requestId?: string
 }
 
@@ -157,6 +171,7 @@ class ContextStorage<T extends object = Record<PropertyKey, unknown>> {
  * })
  * ```
  */
-export const context: ContextStorage<Partial<Context>> = new ContextStorage<
-  Partial<Context>
->()
+export const context: ContextStorage<Partial<ContextStore>> =
+  new ContextStorage<
+    Partial<ContextStore>
+  >()
