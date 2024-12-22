@@ -11,6 +11,8 @@
   },
   "license": "MIT",
   "imports": {
+    "@oneday/global-context": "jsr:@oneday/global-context@^0.3.0",
+    "@oneday/http-status": "jsr:@oneday/http-status@^0.2.0",
     "@std/assert": "jsr:@std/assert@1"
   }
 }

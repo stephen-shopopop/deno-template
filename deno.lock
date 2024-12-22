@@ -1,7 +1,10 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@oneday/global-context@0.3": "0.3.0",
+    "jsr:@oneday/http-status@0.2": "0.2.0",
     "jsr:@std/assert@*": "1.0.6",
+    "jsr:@std/assert@1": "1.0.9",
     "jsr:@std/assert@^1.0.9": "1.0.9",
     "jsr:@std/expect@*": "1.0.9",
     "jsr:@std/internal@^1.0.4": "1.0.4",
@@ -10,6 +13,12 @@
     "npm:@types/node@*": "22.5.4"
   },
   "jsr": {
+    "@oneday/global-context@0.3.0": {
+      "integrity": "bded6613bbedb6c046f3aaf94a1e6d4877dc4812436e4b9aaa42d3f0809df19d"
+    },
+    "@oneday/http-status@0.2.0": {
+      "integrity": "3d0cc33d237ec8c8b355dbbd77e5c45c8335eec7aaffcca4b33220d829e13f42"
+    },
     "@std/assert@1.0.6": {
       "integrity": "1904c05806a25d94fe791d6d883b685c9e2dcd60e4f9fc30f4fc5cf010c72207",
       "dependencies": [
@@ -58,6 +67,8 @@
     "members": {
       "library/error-handling": {
         "dependencies": [
+          "jsr:@oneday/global-context@0.3",
+          "jsr:@oneday/http-status@0.2",
           "jsr:@std/assert@1"
         ]
       }

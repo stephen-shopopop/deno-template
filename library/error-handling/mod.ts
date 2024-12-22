@@ -2,13 +2,35 @@
  * @module
  */
 
-import { HTTPStatus } from 'jsr:@oneday/http-status'
-import { context } from 'jsr:@oneday/global-context'
+import { HTTPStatus } from '@oneday/http-status'
+import { context } from '@oneday/global-context'
 import { inspect } from 'node:util'
 import process from 'node:process'
+import diagnostics_channel from 'node:diagnostics_channel'
 
-export interface ErrorHandler {
-  handleError: (errorToHandle: unknown) => HTTPStatus
+type Observer = (value: AppError) => void
+
+const channels = {
+  /**
+   * ```ts
+   * import diagnostics_channel from 'node:diagnostics_channel'
+   *
+   * diagnostics_channel.subscribe('error-handling:handleError', (message, name) => {
+   *  console.log(message, name)
+   * })
+   * ```
+   */
+  handleError: diagnostics_channel.channel('error-handling:handleError'),
+  /**
+   * ```ts
+   * import diagnostics_channel from 'node:diagnostics_channel'
+   *
+   * diagnostics_channel.subscribe('error-handling:error', (message, name) => {
+   *  console.log(message, name)
+   * })
+   * ```
+   */
+  error: diagnostics_channel.channel('error-handling:error'),
 }
 
 export class AppError extends Error {
@@ -18,6 +40,7 @@ export class AppError extends Error {
     public override name: string,
     public override message: string,
     public HttpStatus: HTTPStatus = HTTPStatus.InternalServerError,
+    public override cause?: unknown,
   ) {
     super(message)
 
@@ -25,92 +48,138 @@ export class AppError extends Error {
   }
 }
 
-function getObjectIfNotAlreadyObject(target: unknown): object {
-  if (typeof target === 'string') {
-    return {
-      message: target,
+class ErrorHandler {
+  static #instance: ErrorHandler
+  #observers: Array<Observer> = []
+
+  // Prevent new with private constructor
+  private constructor() {
+    /** */
+  }
+
+  static getInstance(): ErrorHandler {
+    if (!ErrorHandler.#instance) {
+      ErrorHandler.#instance = new ErrorHandler()
+    }
+
+    return ErrorHandler.#instance
+  }
+
+  attach(func: Observer) {
+    if (typeof func !== 'function' || this.#observers.includes(func)) {
+      return
+    }
+
+    this.#observers.push(func)
+  }
+
+  detach(func: Observer) {
+    this.#observers = this.#observers.filter((observer) => observer !== func)
+  }
+
+  notify(data: AppError) {
+    for (const observer of this.#observers) {
+      observer(data)
     }
   }
 
-  if (typeof target === 'object' && target !== null) {
-    return target
-  }
-
-  return {}
-}
-
-const getOneOfTheseProperties = <ReturnType>(
-  object: Readonly<object>,
-  possibleExistingProperties: Readonly<string[]>,
-  defaultValue: ReturnType,
-): ReturnType => {
-  for (const property of possibleExistingProperties) {
-    if (property in object) {
-      return Reflect.get(object, property)
+  #getObjectIfNotAlreadyObject(target: Readonly<unknown>): object {
+    if (typeof target === 'string') {
+      return {
+        message: target,
+      }
     }
+
+    if (typeof target === 'object' && target !== null) {
+      return target
+    }
+
+    return {}
   }
 
-  return defaultValue
-}
+  #getOneOfTheseProperties = <ReturnType>(
+    object: Readonly<object>,
+    possibleExistingProperties: Readonly<string[]>,
+    defaultValue: ReturnType,
+  ): ReturnType => {
+    for (const property of possibleExistingProperties) {
+      if (property in object) {
+        return Reflect.get(object, property)
+      }
+    }
 
-/**
- * Convert unknown to class AppError with object
- */
-export function convertUnknownToAppError(
-  errorToHandle: unknown,
-): AppError & object {
-  if (errorToHandle instanceof AppError) {
-    return errorToHandle
+    return defaultValue
   }
-  const errorToEnrich: object = getObjectIfNotAlreadyObject(errorToHandle)
 
-  const message = getOneOfTheseProperties(
-    errorToEnrich,
-    ['message', 'reason', 'description'],
-    'Unknown error',
-  )
+  convertUnknownToAppError(
+    errorToHandle: Readonly<unknown>,
+  ): AppError & object {
+    if (errorToHandle instanceof AppError) {
+      return errorToHandle
+    }
+    const errorToEnrich: object = ErrorHandler.#instance
+      .#getObjectIfNotAlreadyObject(
+        errorToHandle,
+      )
 
-  const name = getOneOfTheseProperties(
-    errorToEnrich,
-    ['name', 'code'],
-    'unknown-error',
-  )
+    const message = ErrorHandler.#instance.#getOneOfTheseProperties(
+      errorToEnrich,
+      ['message', 'reason', 'description'],
+      'Unknown error',
+    )
 
-  const httpStatus = getOneOfTheseProperties(
-    errorToEnrich,
-    ['HTTPStatus', 'statusCode', 'status'],
-    HTTPStatus.InternalServerError,
-  )
+    const name = ErrorHandler.#instance.#getOneOfTheseProperties(
+      errorToEnrich,
+      ['name', 'code'],
+      'unknown-error',
+    )
 
-  const stackTrace = getOneOfTheseProperties<string | undefined>(
-    errorToEnrich,
-    ['stack'],
-    undefined,
-  )
+    const httpStatus = ErrorHandler.#instance.#getOneOfTheseProperties(
+      errorToEnrich,
+      ['HTTPStatus', 'statusCode', 'status'],
+      HTTPStatus.InternalServerError,
+    )
 
-  const standardError = new AppError(name, message, httpStatus)
-  standardError.stack = stackTrace
+    const stackTrace = this.#getOneOfTheseProperties<string | undefined>(
+      errorToEnrich,
+      ['stack'],
+      undefined,
+    )
 
-  const standardErrorWithOriginProperties = Object.assign(
-    standardError,
-    errorToEnrich,
-  )
+    const standardError = new AppError(name, message, httpStatus)
+    standardError.stack = stackTrace
 
-  return standardErrorWithOriginProperties
-}
+    const standardErrorWithOriginProperties = Object.assign(
+      standardError,
+      errorToEnrich,
+    )
 
-export const errorHandler: ErrorHandler = Object.freeze({
-  handleError: (errorToHandle: unknown): HTTPStatus => {
+    return standardErrorWithOriginProperties
+  }
+
+  handleError(errorToHandle: Readonly<unknown>): HTTPStatus {
     try {
-      const appError = convertUnknownToAppError(errorToHandle)
+      const appError = ErrorHandler.#instance.convertUnknownToAppError(
+        errorToHandle,
+      )
+
+      channels.handleError.publish({ errorToHandle, appError })
+
+      ErrorHandler.#instance.notify(appError)
 
       return appError.HttpStatus
     } catch (handlingError) {
+      channels.error.publish({ handlingError, errorToHandle })
+
       process.stdout.write('Error handler failed')
       process.stdout.write(inspect(handlingError))
       process.stdout.write(inspect(errorToHandle))
 
       return HTTPStatus.InternalServerError
     }
-  },
-})
+  }
+}
+
+export const errorHandler: Readonly<ErrorHandler> = Object.freeze(
+  ErrorHandler.getInstance(),
+)
