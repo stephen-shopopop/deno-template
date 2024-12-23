@@ -64,6 +64,7 @@ test: ## deno run test
 install:
 	@$(DENO) jupyter --unstable --install
 	@$(DENO) install
+	@brew install lcov
 
 .PHONY:clean
 clean: ## clean binary

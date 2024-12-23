@@ -14,6 +14,9 @@
       "description": "Run tests",
       "command": "deno test --doc --parallel --coverage && deno coverage"
     },
+    "coverage": {
+      "command": "deno coverage --lcov --output=cov.lcov coverage && genhtml -o html_cov cov.lcov"
+    },
     "fmt": {
       "description": "Formatting",
       "command": "deno fmt --check && deno lint"
@@ -37,7 +40,7 @@
     },
     "clean": {
       "description": "Cleaning",
-      "command": "rm -rf ./documentations && rm -rf ./coverage && deno clean"
+      "command": "rm -rf ./documentations && rm -rf ./coverage && rm -rf cov.lcov && rm -rf html_cov && deno clean"
     }
   },
   "unstable": ["cron", "kv"],

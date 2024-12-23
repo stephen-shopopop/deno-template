@@ -1,6 +1,9 @@
 import { HTTPStatus } from '@oneday/http-status'
 import { AppError, errorHandler } from './mod.ts'
-import { assertInstanceOf, assertObjectMatch } from '@std/assert'
+import { assertEquals, assertInstanceOf, assertObjectMatch } from '@std/assert'
+import { assertSpyCall, assertSpyCalls, spy, stub } from 'jsr:@std/testing/mock'
+import diagnostics_channel from 'node:diagnostics_channel'
+import process from 'node:process'
 
 Deno.test({
   name: 'Class AppError',
@@ -183,5 +186,149 @@ Deno.test({
         HttpStatus: HTTPStatus.NotFound,
       },
     )
+  },
+})
+
+Deno.test({
+  name: 'errorHandler:attach with notify',
+  fn() {
+    // Arrange
+    const appError = new AppError('ResourceNotFound', 'User resource not found')
+    const func = spy()
+
+    errorHandler.attach(func)
+
+    // Act
+    errorHandler.notify(appError)
+
+    // Assert
+    assertSpyCalls(func, 1)
+    assertSpyCall(func, 0, {
+      args: [
+        appError,
+      ],
+      returned: undefined,
+    })
+  },
+})
+
+Deno.test({
+  name: 'errorHandler:detach with notify',
+  fn() {
+    // Arrange
+    const appError = new AppError('ResourceNotFound', 'User resource not found')
+    const func = spy()
+
+    errorHandler.attach(func)
+    errorHandler.detach(func)
+
+    // Act
+    errorHandler.notify(appError)
+
+    // Assert
+    assertSpyCalls(func, 0)
+  },
+})
+
+Deno.test({
+  name: 'errorHandler:handleError with Error',
+  fn() {
+    // Arrange
+    const func = spy()
+
+    errorHandler.attach(func)
+
+    // Act
+    const httpStatus = errorHandler.handleError(new Error('Technical error'))
+
+    // Assert
+    assertEquals(httpStatus, HTTPStatus.InternalServerError)
+    assertSpyCalls(func, 1)
+  },
+})
+
+Deno.test({
+  name: 'errorHandler:handleError with AppError',
+  fn() {
+    // Arrange
+    const appError = new AppError(
+      'ResourceNotFound',
+      'User resource not found',
+      true,
+      HTTPStatus.NotFound,
+    )
+    const func = spy()
+
+    errorHandler.attach(func)
+
+    // Act
+    const httpStatus = errorHandler.handleError(appError)
+
+    // Assert
+    assertEquals(httpStatus, HTTPStatus.NotFound)
+    assertSpyCalls(func, 1)
+    assertSpyCall(func, 0, {
+      args: [
+        appError,
+      ],
+      returned: undefined,
+    })
+  },
+})
+
+Deno.test({
+  name: 'errorHandler:handleError diagnostics_channel',
+  fn() {
+    // Arrange
+    let errorHandling: unknown
+    let errorToHandle: unknown
+
+    const appError = new AppError('ResourceNotFound', 'User resource not found')
+
+    diagnostics_channel.subscribe(
+      'error-handling:handleError',
+      (message) => {
+        errorHandling = (message as { appError: unknown })?.appError
+        errorToHandle = (message as { errorToHandle: unknown })?.errorToHandle
+      },
+    )
+    // Act
+    errorHandler.handleError(appError)
+
+    // Assert
+    assertEquals(errorHandling, appError)
+    assertEquals(errorToHandle, appError)
+  },
+})
+
+Deno.test({
+  name: 'error-handling:error diagnostics_channel',
+  fn() {
+    // Arrange
+    stub(process.stdout, 'write')
+
+    let errorHandling: unknown
+    let errorToHandle: unknown
+
+    const appError = new AppError('ResourceNotFound', 'User resource not found')
+
+    diagnostics_channel.subscribe(
+      'error-handling:error',
+      (message) => {
+        errorHandling = (message as { handlingError: unknown })?.handlingError
+        errorToHandle = (message as { errorToHandle: unknown })?.errorToHandle
+      },
+    )
+
+    errorHandler.attach((error: AppError) => {
+      throw error
+    })
+
+    // Act
+    errorHandler.handleError(appError)
+
+    // Assert
+    assertEquals(errorHandling, appError)
+    assertEquals(errorToHandle, appError)
   },
 })

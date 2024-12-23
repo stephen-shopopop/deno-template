@@ -48,7 +48,6 @@ const channels = {
  *
  * // client throwing an exception
  * throw new AppError(commonErrors.resourceNotFound,'further explanation', true, HTTPStatus.NotFound)
- *
  * ```
  */
 export class AppError extends Error {
@@ -58,7 +57,6 @@ export class AppError extends Error {
    * @param isOperational operational 's error - default false
    * @param HttpStatus Http status code
    */
-
   constructor(
     public override name: string,
     public override message: string,
@@ -107,11 +105,9 @@ class ErrorHandler {
   /**
    * # Example
    *
-   * ```typescript ignore
-   * import { Logger } from "jsr:@deno-library/logger";
+   * ```ts
+   * import * as logger from 'jsr:@std/log';
    * import { errorHandler } from 'jsr:@oneday/error-handling';
-   *
-   * const logger = new Logger()
    *
    * errorHandler.attach(logger.error)
    * ```
@@ -127,11 +123,9 @@ class ErrorHandler {
   /**
    * # Example
    *
-   * ```typescript ignore
-   * import { Logger } from "jsr:@deno-library/logger";
+   * ```ts
+   * import * as logger from 'jsr:@std/log';
    * import { errorHandler } from 'jsr:@oneday/error-handling';
-   *
-   * const logger = new Logger()
    *
    * errorHandler.detach(logger.error)
    * ```
@@ -144,15 +138,14 @@ class ErrorHandler {
    * # Example
    *
    * ```typescript ignore
-   * import { Logger } from "jsr:@deno-library/logger";
+   * import * as logger from 'jsr:@std/log';
    * import { errorHandler } from 'jsr:@oneday/error-handling';
    *
-   * const logger = new Logger()
-   * const appError = new AppError(commonErrors.resourceNotFound,'further explanation', true, HTTPStatus.NotFound)
+   * errorHandler.attach(logger.error)
    *
-   * errorHandler.attache(logger.error)
+   * errorHandler.notify(new AppError('resourceNotFound','further explanation'))
    *
-   * errorHandler.notify(appError)
+   * // stdout: ERROR resourceNotFound: further explanation
    * ```
    */
   notify(data: AppError) {
