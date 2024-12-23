@@ -1,20 +1,29 @@
 {
   "version": "4",
   "specifiers": {
-    "jsr:@oneday/global-context@0.3": "0.3.0",
+    "jsr:@deno-library/logger@*": "1.1.7",
     "jsr:@oneday/http-status@0.2": "0.2.0",
     "jsr:@std/assert@*": "1.0.6",
     "jsr:@std/assert@1": "1.0.9",
     "jsr:@std/assert@^1.0.9": "1.0.9",
     "jsr:@std/expect@*": "1.0.9",
+    "jsr:@std/fmt@1.0.3": "1.0.3",
+    "jsr:@std/fs@1.0.5": "1.0.5",
     "jsr:@std/internal@^1.0.4": "1.0.4",
     "jsr:@std/internal@^1.0.5": "1.0.5",
+    "jsr:@std/io@0.225.0": "0.225.0",
+    "jsr:@std/path@^1.0.7": "1.0.8",
     "jsr:@std/testing@*": "1.0.6",
     "npm:@types/node@*": "22.5.4"
   },
   "jsr": {
-    "@oneday/global-context@0.3.0": {
-      "integrity": "bded6613bbedb6c046f3aaf94a1e6d4877dc4812436e4b9aaa42d3f0809df19d"
+    "@deno-library/logger@1.1.7": {
+      "integrity": "817947f12178e0faf21d43e4ec3823272dbdbb897dea74aec1220b00d60dc6bd",
+      "dependencies": [
+        "jsr:@std/fmt",
+        "jsr:@std/fs",
+        "jsr:@std/io"
+      ]
     },
     "@oneday/http-status@0.2.0": {
       "integrity": "3d0cc33d237ec8c8b355dbbd77e5c45c8335eec7aaffcca4b33220d829e13f42"
@@ -38,11 +47,26 @@
         "jsr:@std/internal@^1.0.5"
       ]
     },
+    "@std/fmt@1.0.3": {
+      "integrity": "97765c16aa32245ff4e2204ecf7d8562496a3cb8592340a80e7e554e0bb9149f"
+    },
+    "@std/fs@1.0.5": {
+      "integrity": "41806ad6823d0b5f275f9849a2640d87e4ef67c51ee1b8fb02426f55e02fd44e",
+      "dependencies": [
+        "jsr:@std/path"
+      ]
+    },
     "@std/internal@1.0.4": {
       "integrity": "62e8e4911527e5e4f307741a795c0b0a9e6958d0b3790716ae71ce085f755422"
     },
     "@std/internal@1.0.5": {
       "integrity": "54a546004f769c1ac9e025abd15a76b6671ddc9687e2313b67376125650dc7ba"
+    },
+    "@std/io@0.225.0": {
+      "integrity": "c1db7c5e5a231629b32d64b9a53139445b2ca640d828c26bf23e1c55f8c079b3"
+    },
+    "@std/path@1.0.8": {
+      "integrity": "548fa456bb6a04d3c1a1e7477986b6cffbce95102d0bb447c67c4ee70e0364be"
     },
     "@std/testing@1.0.6": {
       "integrity": "9192ded2d34065f4c959fdc1921fe836770abb9194410c2cc8a0fff4eff5c893",
@@ -67,7 +91,6 @@
     "members": {
       "library/error-handling": {
         "dependencies": [
-          "jsr:@oneday/global-context@0.3",
           "jsr:@oneday/http-status@0.2",
           "jsr:@std/assert@1"
         ]
