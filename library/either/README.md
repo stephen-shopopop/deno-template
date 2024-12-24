@@ -1,7 +1,7 @@
 # Library either
 
 [![JSR @oneday](https://jsr.io/badges/@oneday/either)](https://jsr.io/@oneday/either)
-[![JSR Score](https://jsr.io/badges/@oneday/either/score)](https://jsr.io/@oneday>/either)
+[![JSR Score](https://jsr.io/badges/@oneday/either/score)](https://jsr.io/@oneday/either)
 
 - 🚀 Full-featured deno and node
 - 🏄‍♀️ Simple usage
