@@ -514,6 +514,4 @@ export class ErrorHandler {
   }
 }
 
-export const errorHandler: Readonly<ErrorHandler> = Object.freeze(
-  ErrorHandler.getInstance(),
-)
+export const errorHandler: ErrorHandler = ErrorHandler.getInstance()
