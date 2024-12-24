@@ -450,9 +450,6 @@ export class ErrorHandler {
    * Error handling logic such as logging, deciding whether to crash and monitoring metrics should be encapsulated in a dedicated and centralized object
    * that all entry-points (e.g. APIs, cron jobs, scheduled jobs) call when an error comes in
    *
-   * @param errorToHandle
-   * @returns HTTPStatus - http status code
-   *
    * # Example 1
    *
    * ```typescript ignore
