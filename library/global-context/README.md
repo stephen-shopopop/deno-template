@@ -1,7 +1,7 @@
 # Library global-context
 
 [![JSR @oneday](https://jsr.io/badges/@oneday/global-context)](https://jsr.io/@oneday/global-context)
-[![JSR Score](https://jsr.io/badges/@oneday/global-context/score)](https://jsr.io/@oneday>/global-context)
+[![JSR Score](https://jsr.io/badges/@oneday/global-context/score)](https://jsr.io/@oneday/global-context)
 
 - 🚀 Full-featured deno and node
 - 🏄‍♀️ Simple usage
