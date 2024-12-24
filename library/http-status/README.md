@@ -1,7 +1,7 @@
 # Library http-status
 
 [![JSR @oneday](https://jsr.io/badges/@oneday/http-status)](https://jsr.io/@oneday/http-status)
-[![JSR Score](https://jsr.io/badges/@oneday/http-status/score)](https://jsr.io/@oneday>/http-status)
+[![JSR Score](https://jsr.io/badges/@oneday/http-status/score)](https://jsr.io/@oneday/http-status)
 
 - 🚀 Full-featured deno and node
 - 🏄‍♀️ Simple usage
