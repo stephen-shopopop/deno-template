@@ -1,13 +1,15 @@
-// deno-lint-ignore no-explicit-any
-type Constructor<T> = new (...args: any[]) => T
+interface Constructor<T, U> {
+  constructor: new (...args: U[]) => T
+  arguments: U
+}
 
-export class Dependency2<Service> {
+export class Dependency<Service, Args> {
   #serviceInjected?: Service
   #serviceCached?: Service
 
   constructor(
-    private serviceInitializer: Constructor<Service>,
-    private args: ConstructorParameters<Constructor<Service>>,
+    private serviceInitializer: Constructor<Service, Args>['constructor'],
+    private args: Constructor<Service, Args>['arguments'][],
     private cacheable = true,
   ) {/** */}
 
@@ -45,11 +47,12 @@ export class Dependency2<Service> {
   }
 }
 
-// Default
-// const user = new Dependency(() => null);
+/**
+ * POC test
+ */
 
 class TestService {
-  constructor(public name: string) {}
+  constructor(public name: string, public first: string) {}
 
   setValue(val: string) {
     this.name = val
@@ -61,7 +64,7 @@ class TestService {
 }
 
 class TestService2 {
-  constructor(public name: string) {}
+  constructor(public name: string, public first: string) {}
 
   setValue(val: string) {
     this.name = val
@@ -72,11 +75,33 @@ class TestService2 {
   }
 }
 
-const dep2 = new Dependency2(TestService, ['test'], true)
-console.log(dep2.resolve.hi()) // Hello test
-dep2.resolve.setValue('manger')
-console.log(dep2.resolve.hi()) // Hello manger (use cache)
-dep2.injection(new TestService2('nope'))
-console.log(dep2.resolve.hi()) // Hello nope
+class Order {
+  constructor(private user: TestService) {
+    /** */
+  }
+
+  execute() {
+    return this.user.hi()
+  }
+}
+
+const dep2 = new Dependency(TestService, ['the world', 'harry'])
+console.log(dep2.resolve.hi()) // Hello the world
+
+dep2.resolve.setValue('daddy')
+console.log(dep2.resolve.hi()) // Hello daddy (use cache)
+
+dep2.injection(new TestService2('mummy', 'john'))
+console.log(dep2.resolve.hi()) // Hello mummy
+
 dep2.clearInjected()
-console.log(dep2.resolve.hi()) // Hello manger (use cache)
+console.log(dep2.resolve.hi()) // Hello daddy (use cache)
+
+const user = new Dependency(TestService, ['Bernard', 'Noe'])
+user.injection(new TestService2('marie', 'joe'))
+const order = new Dependency(Order, [user.resolve])
+user.clearInjected()
+const order2 = new Dependency(Order, [user.resolve])
+
+console.log(order.resolve.execute())
+console.log(order2.resolve.execute())
