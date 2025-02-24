@@ -1,0 +1,12 @@
+{
+  "name": "@oneday/simple-di",
+  "version": "0.1.0",
+  "exports": "./mod.ts",
+  "tasks": {
+    "dev": "deno test --doc --watch mod.ts",
+    "test": "deno test --doc -- --exclude=README.md",
+    "check": "deno fmt --check && deno lint && deno task test",
+    "publish": "deno publish --dry-run"
+  },
+  "license": "MIT"
+}

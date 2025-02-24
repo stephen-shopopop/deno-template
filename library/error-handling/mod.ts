@@ -256,6 +256,7 @@ const channels = {
  * throw new AppError(commonErrors.resourceNotFound,'further explanation', true, HTTPStatus.NotFound)
  * ```
  */
+
 export class AppError extends Error {
   /**
    * @param name Error Name
