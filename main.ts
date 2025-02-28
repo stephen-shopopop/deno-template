@@ -7,8 +7,6 @@
 // import { Buffer } from 'node:buffer'
 // import { pipeline } from 'node:stream/promises'
 
-
-
 // /**
 //  * Adds x and y.
 //  *
@@ -121,28 +119,28 @@
 
 class Adaptee {
   fetchData() {
-      return {
-          data: { name: 'john', age: 25, social: { email: 'john@doe.com' } },
-      } as const;
+    return {
+      data: { name: 'john', age: 25, social: { email: 'john@doe.com' } },
+    } as const
   }
 }
 
 interface Target {
-  email: string;
+  email: string
 }
 
 class Adapter implements Target {
   constructor(private adaptee: Adaptee) {/** */}
 
   get email(): string {
-      return this.adaptee.fetchData().data.social.email;
+    return this.adaptee.fetchData().data.social.email
   }
 }
 
 function clientCode(data: Target) {
-  console.log(`Email: ${data.email}`);
+  console.log(`Email: ${data.email}`)
 }
 
-const adaptee = new Adaptee();
-const adapter = new Adapter(adaptee);
-clientCode(adapter); // Email: john@doe.com'
+const adaptee = new Adaptee()
+const adapter = new Adapter(adaptee)
+clientCode(adapter) // Email: john@doe.com'

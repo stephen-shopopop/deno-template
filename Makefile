@@ -13,7 +13,7 @@ DEPS    = $(DENO) info
 DOCS    = $(DENO) doc main.ts --json
 INSPECT = $(DENO) run --inspect-brk
 
-DENO_VERSION = 2.1.4
+DENO_VERSION = 2.2.2
 
 default: help
 
