@@ -4,4 +4,4 @@
  * @module
  */
 
-export { Dependency } from './_dependencies.ts'
+export { Dependency } from './dependencies.ts'

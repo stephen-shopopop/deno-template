@@ -1,7 +1,10 @@
 {
   "name": "@oneday/simple-di",
   "version": "0.1.0",
-  "exports": "./mod.ts",
+  "exports": {
+    ".": "./mod.ts",
+    "./dependencies": "./dependencies.ts"
+  },
   "tasks": {
     "dev": "deno test --doc --watch mod.ts",
     "test": "deno test --doc -- --exclude=README.md",
