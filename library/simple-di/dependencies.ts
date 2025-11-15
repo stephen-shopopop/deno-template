@@ -1,5 +1,5 @@
 export type ClassType<T = any, Args extends any[] = any[]> =
-  new (...args: Args) => T;
+  new (...args: Args) => T
 
 
 export type NonEmptyArray<T> = [T, ...T[]]
