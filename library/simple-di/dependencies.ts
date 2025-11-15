@@ -1,7 +1,6 @@
-type Constructor<T, U> = {
-  constructor: new (...args: U[]) => T
-  arguments: U
-}
+export type ClassType<T = any, Args extends any[] = any[]> =
+  new (...args: Args) => T;
+
 
 export type NonEmptyArray<T> = [T, ...T[]]
 
@@ -21,13 +20,13 @@ export type NonEmptyArray<T> = [T, ...T[]]
  * assertEquals(user.resolve.name, 'John');
  * ```
  */
-export class Dependency<Service, Args> {
+export class Dependency<Service, Args extends any[] = any[]> {
   #serviceInjected?: Service
   #serviceCached?: Service
 
   constructor(
-    private serviceInitializer: Constructor<Service, Args>['constructor'],
-    private args: Constructor<Service, Args>['arguments'][] = [],
+    private serviceInitializer: ClassType<Service, Args>,
+    private args: Args = [] as unknown as Args,
     private cacheable = true,
   ) {/** */}
 
@@ -108,6 +107,6 @@ export class Dependency<Service, Args> {
     return (this.#serviceCached ??= Reflect.construct(
       this.serviceInitializer,
       this.args,
-    ))
+    ) as Service)
   }
 }
