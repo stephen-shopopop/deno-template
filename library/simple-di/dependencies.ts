@@ -1,6 +1,4 @@
-export type ClassType<T = any, Args extends any[] = any[]> =
-  new (...args: Args) => T
-
+export type ClassType<T = any> = new (...args: any[]) => T
 
 export type NonEmptyArray<T> = [T, ...T[]]
 
@@ -20,13 +18,29 @@ export type NonEmptyArray<T> = [T, ...T[]]
  * assertEquals(user.resolve.name, 'John');
  * ```
  */
-export class Dependency<Service, Args extends any[] = any[]> {
+export class Dependency<Service> {
   #serviceInjected?: Service
   #serviceCached?: Service
 
+  /**
+   * Constructor overload for classes without required parameters
+   */
   constructor(
-    private serviceInitializer: ClassType<Service, Args>,
-    private args: Args = [] as unknown as Args,
+    serviceInitializer: ClassType<Service> & (new () => Service),
+    args?: [],
+    cacheable?: boolean,
+  )
+  /**
+   * Constructor overload for classes with parameters
+   */
+  constructor(
+    serviceInitializer: ClassType<Service>,
+    args: ConstructorParameters<ClassType<Service>>,
+    cacheable?: boolean,
+  )
+  constructor(
+    private serviceInitializer: ClassType<Service>,
+    private args: ConstructorParameters<ClassType<Service>> = [] as any,
     private cacheable = true,
   ) {/** */}
 
