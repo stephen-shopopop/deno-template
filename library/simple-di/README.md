@@ -38,6 +38,8 @@ console.log(userDep.resolve.greet()) // "Hello, I'm Alice, 30 years old"
 ### Class without parameters
 
 ```typescript
+import { Dependency } from 'jsr:@oneday/simple-di'
+
 class LoggerService {
   log(message: string) {
     console.log(`[LOG] ${message}`)
@@ -52,6 +54,8 @@ logger.resolve.log('Hello World') // "[LOG] Hello World"
 ### Class with parameters (strict typing)
 
 ```typescript
+import { Dependency } from 'jsr:@oneday/simple-di'
+
 class UserService {
   constructor(public name: string, public age: number) {}
 }
@@ -72,6 +76,8 @@ const user = new Dependency(UserService, ['John', 25])
 ### Optional parameters
 
 ```typescript
+import { Dependency } from 'jsr:@oneday/simple-di'
+
 class ProductService {
   constructor(
     public id: number,
@@ -88,6 +94,8 @@ const product2 = new Dependency(ProductService, [1, 'Laptop', 999.99])
 ### Cache management
 
 ```typescript
+import { Dependency } from 'jsr:@oneday/simple-di'
+
 class CounterService {
   counter = 0
   increment() {
@@ -111,19 +119,25 @@ console.log(notCached.resolve.counter) // 1 (new instance each time)
 ### Manual injection for testing
 
 ```typescript
+import { Dependency } from 'jsr:@oneday/simple-di'
+
 class UserRepository {
   constructor(public dbUrl: string) {}
 
   async findUser(id: number) {
-    // Real database call
-    return await fetch(`${this.dbUrl}/users/${id}`)
+    // Real database call (simulated)
+    return { id, name: `User ${id}`, source: 'database' }
   }
 }
 
-class MockUserRepository {
-  async findUser(id: number) {
+class MockUserRepository extends UserRepository {
+  constructor() {
+    super('mock://db')
+  }
+
+  override async findUser(id: number) {
     // Mock data
-    return { id, name: 'Mock User' }
+    return { id, name: 'Mock User' } as any
   }
 }
 
@@ -147,6 +161,8 @@ const realUser2 = await userRepo.resolve.findUser(2) // Real database call
 The `Dependency` class implements `Disposable` to automatically clean up injected resources:
 
 ```typescript
+import { Dependency } from 'jsr:@oneday/simple-di'
+
 class DatabaseConnection implements Disposable {
   private connected = false
 
@@ -197,6 +213,22 @@ This design allows you to:
 3. **Avoid unexpected resource disposal** of long-lived services
 
 ```typescript
+import { Dependency } from 'jsr:@oneday/simple-di'
+
+class ApiService {
+  constructor(public url: string) {}
+}
+
+class MockApiService extends ApiService implements Disposable {
+  constructor() {
+    super('mock://api')
+  }
+
+  [Symbol.dispose]() {
+    // Cleanup mock resources
+  }
+}
+
 // ✅ Good: Test mock is disposed after use
 const apiDep = new Dependency(ApiService, ['https://api.prod.com'])
 
@@ -218,6 +250,8 @@ const apiDep = new Dependency(ApiService, ['https://api.prod.com'])
 ### Multiple disposable injections
 
 ```typescript
+import { Dependency } from 'jsr:@oneday/simple-di'
+
 class TestDatabase implements Disposable {
   constructor(public name: string) {
     console.log(`🔧 Created ${name}`)
@@ -249,7 +283,17 @@ console.log(dbDep.resolve.name) // "production"
 ### Programmatic cleanup with `clearInjected()`
 
 ```typescript
-class DisposableMock implements Disposable {
+import { Dependency } from 'jsr:@oneday/simple-di'
+
+class RealService {
+  constructor(public config: string) {}
+}
+
+class DisposableMock extends RealService implements Disposable {
+  constructor() {
+    super('mock')
+  }
+
   [Symbol.dispose]() {
     console.log('🧹 Mock cleaned up')
   }
@@ -293,6 +337,18 @@ The constructor uses TypeScript's `ConstructorParameters<T>` to enforce type-saf
 **Examples:**
 
 ```typescript
+import { Dependency } from 'jsr:@oneday/simple-di'
+
+class LoggerService {
+  log(msg: string) {
+    console.log(msg)
+  }
+}
+
+class UserService {
+  constructor(public name: string, public age: number) {}
+}
+
 // No parameters
 new Dependency(LoggerService)
 new Dependency(LoggerService, [])
@@ -328,6 +384,18 @@ Manually injects a service instance, overriding the default service.
 **Example:**
 
 ```typescript
+import { Dependency } from 'jsr:@oneday/simple-di'
+
+class UserRepository {
+  constructor(public db: string) {}
+}
+
+class MockUserRepository extends UserRepository {
+  constructor() {
+    super('mock-db')
+  }
+}
+
 const userRepo = new Dependency(UserRepository, ['prod-db'])
 
 // Inject a mock
@@ -351,6 +419,18 @@ Clears the manually injected service and returns to the original service.
 **Example:**
 
 ```typescript
+import { Dependency } from 'jsr:@oneday/simple-di'
+
+class RealService {
+  constructor(public config: string) {}
+}
+
+class MockService extends RealService {
+  constructor() {
+    super('mock')
+  }
+}
+
 const dep = new Dependency(RealService, ['config'])
 
 dep.injection(new MockService())
@@ -377,6 +457,12 @@ Resolves and returns the service instance.
 **Example:**
 
 ```typescript
+import { Dependency } from 'jsr:@oneday/simple-di'
+
+class UserService {
+  constructor(public name: string, public age: number) {}
+}
+
 const dep = new Dependency(UserService, ['Alice', 30])
 
 // First call - creates and caches instance
@@ -402,6 +488,22 @@ Disposes the dependency and cleans up resources.
 **Example:**
 
 ```typescript
+import { Dependency } from 'jsr:@oneday/simple-di'
+
+class RealService {
+  constructor(public config: string) {}
+}
+
+class DisposableMock extends RealService implements Disposable {
+  constructor() {
+    super('mock')
+  }
+
+  [Symbol.dispose]() {
+    console.log('Cleanup')
+  }
+}
+
 // Automatic disposal with 'using'
 {
   using dep = new Dependency(RealService, ['config'])
@@ -431,6 +533,8 @@ The system uses `ConstructorParameters<T>` to extract and validate constructor p
 **Example:**
 
 ```typescript
+import { Dependency } from 'jsr:@oneday/simple-di'
+
 class ApiService {
   constructor(
     public baseUrl: string,
@@ -468,6 +572,23 @@ const api2 = new Dependency(ApiService, [3000, 'https://api.example.com'])
 **Pattern:**
 
 ```typescript
+import { Dependency } from 'jsr:@oneday/simple-di'
+
+class ProductionService {
+  constructor(public config: string) {}
+  doWork() {}
+}
+
+class DisposableTestMock extends ProductionService implements Disposable {
+  constructor() {
+    super('mock')
+  }
+
+  [Symbol.dispose]() {}
+
+  override doWork() {}
+}
+
 // ✅ Recommended: Clean up test resources
 const service = new Dependency(ProductionService, ['config'])
 
@@ -487,6 +608,12 @@ service.resolve.doWork()
 Control instance lifecycle to match your needs:
 
 ```typescript
+import { Dependency } from 'jsr:@oneday/simple-di'
+
+class Service {
+  constructor(public config: string) {}
+}
+
 // Singleton pattern (default)
 const singleton = new Dependency(Service, ['config'], true)
 const a = singleton.resolve

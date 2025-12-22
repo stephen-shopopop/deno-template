@@ -5,14 +5,17 @@
  *
  * @example
  * ```ts
+ * import { Dependency } from 'jsr:@oneday/simple-di'
+ *
  * class User {
  *   constructor(public name: string) {}
  * }
  *
- * const UserClass: ClassType<User> = User;
- * const user = new UserClass('John');
+ * const dep = new Dependency(User, ['John'])
+ * const user = dep.resolve
  * ```
  */
+// deno-lint-ignore no-explicit-any
 type ClassType<T = any> = new (...args: any[]) => T
 
 /**
@@ -37,6 +40,12 @@ type ClassType<T = any> = new (...args: any[]) => T
  *
  * @example With caching
  * ```ts
+ * import { Dependency } from 'jsr:@oneday/simple-di'
+ *
+ * class UserService {
+ *   constructor(public name: string) {}
+ * }
+ *
  * const cached = new Dependency(UserService, ['Bob'], true);
  * const instance1 = cached.resolve;
  * const instance2 = cached.resolve;
@@ -50,12 +59,20 @@ type ClassType<T = any> = new (...args: any[]) => T
  *
  * @example Manual injection for testing
  * ```ts
- * class MockUserService {
+ * import { Dependency } from 'jsr:@oneday/simple-di'
+ *
+ * class UserService {
  *   constructor(public name: string) {}
  * }
  *
+ * class MockUserService extends UserService {
+ *   constructor() {
+ *     super('Mock')
+ *   }
+ * }
+ *
  * const userDep = new Dependency(UserService, ['Alice']);
- * userDep.injection(new MockUserService('Mock'));
+ * userDep.injection(new MockUserService());
  * console.log(userDep.resolve.name); // "Mock"
  *
  * userDep.clearInjected();
@@ -64,6 +81,8 @@ type ClassType<T = any> = new (...args: any[]) => T
  *
  * @example Disposable pattern
  * ```ts
+ * import { Dependency } from 'jsr:@oneday/simple-di'
+ *
  * class Database implements Disposable {
  *   constructor(public url: string) {}
  *
@@ -76,8 +95,7 @@ type ClassType<T = any> = new (...args: any[]) => T
  *
  * {
  *   using _ = dbDep;
- *   const mockDb = new Database('mock://test');
- *   dbDep.injection(mockDb);
+ *   dbDep.injection(new Database('mock://test'));
  *   // Use mockDb...
  * } // mockDb is automatically disposed here
  * ```
@@ -138,6 +156,7 @@ export class Dependency<Service> implements Disposable {
   )
   constructor(
     private serviceInitializer: ClassType<Service>,
+    // deno-lint-ignore no-explicit-any
     private args: ConstructorParameters<ClassType<Service>> = [] as any,
     private cacheable = true,
   ) {
@@ -160,12 +179,14 @@ export class Dependency<Service> implements Disposable {
    *
    * @example Basic injection
    * ```ts
+   * import { Dependency } from 'jsr:@oneday/simple-di'
+   *
    * class UserService {
    *   getUser() { return 'Real user'; }
    * }
    *
-   * class MockUserService {
-   *   getUser() { return 'Mock user'; }
+   * class MockUserService extends UserService {
+   *   override getUser() { return 'Mock user'; }
    * }
    *
    * const userDep = new Dependency(UserService, []);
@@ -175,7 +196,11 @@ export class Dependency<Service> implements Disposable {
    *
    * @example Disposable injection
    * ```ts
+   * import { Dependency } from 'jsr:@oneday/simple-di'
+   *
    * class Database implements Disposable {
+   *   constructor(public name: string) {}
+   *
    *   [Symbol.dispose]() {
    *     console.log('Cleanup');
    *   }
@@ -302,6 +327,12 @@ export class Dependency<Service> implements Disposable {
    *
    * @example Priority: injected > cached > new
    * ```ts
+   * import { Dependency } from 'jsr:@oneday/simple-di'
+   *
+   * class UserService {
+   *   constructor(public name: string) {}
+   * }
+   *
    * const userDep = new Dependency(UserService, ['Original']);
    *
    * const cached = userDep.resolve; // Creates and caches instance
@@ -341,6 +372,8 @@ export class Dependency<Service> implements Disposable {
    *
    * @example Automatic disposal with `using` keyword
    * ```ts
+   * import { Dependency } from 'jsr:@oneday/simple-di'
+   *
    * class Database implements Disposable {
    *   constructor(public url: string) {
    *     console.log(`Connected to ${url}`);
@@ -365,6 +398,16 @@ export class Dependency<Service> implements Disposable {
    *
    * @example Manual disposal
    * ```ts
+   * import { Dependency } from 'jsr:@oneday/simple-di'
+   *
+   * class Database implements Disposable {
+   *   constructor(public url: string) {}
+   *
+   *   [Symbol.dispose]() {
+   *     console.log(`Disconnected from ${this.url}`);
+   *   }
+   * }
+   *
    * const dbDep = new Dependency(Database, ['prod-db']);
    * dbDep.injection(new Database('test-db'));
    *

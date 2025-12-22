@@ -28,13 +28,14 @@
  *
  * class ApiService {
  *   async fetchData() {
- *     return await fetch('https://api.example.com/data');
+ *     // Simulated API call
+ *     return { data: 'real data' };
  *   }
  * }
  *
- * class MockApiService {
- *   async fetchData() {
- *     return { json: () => ({ mock: true }) };
+ * class MockApiService extends ApiService {
+ *   override async fetchData() {
+ *     return { data: 'mock data' };
  *   }
  * }
  *
