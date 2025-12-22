@@ -18,9 +18,12 @@ export type NonEmptyArray<T> = [T, ...T[]]
  * assertEquals(user.resolve.name, 'John');
  * ```
  */
-export class Dependency<Service> {
+export class Dependency<Service> implements Disposable {
   #serviceInjected?: Service
+
   #serviceCached?: Service
+
+  #stack = new DisposableStack()
 
   /**
    * Constructor overload for classes without required parameters
@@ -42,7 +45,11 @@ export class Dependency<Service> {
     private serviceInitializer: ClassType<Service>,
     private args: ConstructorParameters<ClassType<Service>> = [] as any,
     private cacheable = true,
-  ) {/** */}
+  ) {
+    this.#stack.adopt(this.injection, () => {
+      this.#serviceInjected = undefined
+    })
+  }
 
   /**
    * Injects a service instance directly. Useful for overriding the default service.
@@ -64,6 +71,15 @@ export class Dependency<Service> {
    */
   injection(service: Service): this {
     this.#serviceInjected = service
+    
+    // If the injected service is Disposable, add it to the stack
+    if (
+      service &&
+      typeof service === 'object' &&
+      Symbol.dispose in service
+    ) {
+      this.#stack.use(service as Disposable)
+    }
 
     return this
   }
@@ -122,5 +138,9 @@ export class Dependency<Service> {
       this.serviceInitializer,
       this.args,
     ) as Service)
+  }
+
+  [Symbol.dispose]() {
+    this.#stack.dispose()
   }
 }
