@@ -8,5 +8,8 @@
     "check": "deno fmt --check && deno lint && deno task test",
     "publish": "deno publish --dry-run"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "imports": {
+    "@std/assert": "jsr:@std/assert@^1"
+  }
 }

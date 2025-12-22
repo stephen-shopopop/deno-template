@@ -1,12 +1,7 @@
 import { HTTPStatus } from '@oneday/http-status'
 import { AppError, errorHandler } from './mod.ts'
 import { assertEquals, assertInstanceOf, assertObjectMatch } from '@std/assert'
-import {
-  assertSpyCall,
-  assertSpyCalls,
-  spy,
-  stub,
-} from 'jsr:@std/testing@^1/mock'
+import { assertSpyCall, assertSpyCalls, spy, stub } from '@std/testing/mock'
 import diagnostics_channel from 'node:diagnostics_channel'
 import process from 'node:process'
 

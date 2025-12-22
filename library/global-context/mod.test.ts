@@ -1,7 +1,7 @@
 import { context } from './mod.ts'
-import { describe, test } from 'jsr:@std/testing@^1/bdd'
-import { expect } from 'jsr:@std/expect@^1'
-import { assertSpyCall, assertSpyCalls, spy } from 'jsr:@std/testing@^1/mock'
+import { describe, test } from '@std/testing/bdd'
+import { expect } from '@std/expect'
+import { assertSpyCall, assertSpyCalls, spy } from '@std/testing/mock'
 
 describe('global-context', () => {
   test('When instantiating a new context with initial context, then should return the initial context', () => {
