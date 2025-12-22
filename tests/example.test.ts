@@ -1,4 +1,4 @@
-import { assertEquals } from 'jsr:@std/assert'
+import { assertEquals } from 'jsr:@std/assert@^1'
 
 // Compact form: name and function
 Deno.test('hello world #1', () => {

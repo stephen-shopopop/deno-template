@@ -1,5 +1,5 @@
 import { HTTPStatus, httpStatusText } from './mod.ts'
-import { assertEquals } from 'jsr:@std/assert'
+import { assertEquals } from 'jsr:@std/assert@^1'
 
 Deno.test({
   name: 'HTTPStatus',
