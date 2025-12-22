@@ -1,21 +1,85 @@
-export type ClassType<T = any> = new (...args: any[]) => T
-
-export type NonEmptyArray<T> = [T, ...T[]]
+/**
+ * A class constructor type that can be used to create instances of type T.
+ *
+ * @template T The type of the instance that will be created.
+ *
+ * @example
+ * ```ts
+ * class User {
+ *   constructor(public name: string) {}
+ * }
+ *
+ * const UserClass: ClassType<User> = User;
+ * const user = new UserClass('John');
+ * ```
+ */
+type ClassType<T = any> = new (...args: any[]) => T
 
 /**
- * Use to manage class dependencies
+ * A type-safe dependency injection container with support for caching and the Disposable pattern.
  *
- * # Example
+ * The `Dependency` class manages service instantiation with strict type checking,
+ * optional caching, and automatic cleanup of injected disposable resources.
  *
+ * @template Service The type of service this dependency manages.
+ *
+ * @example Basic usage
  * ```ts
- * import { assertEquals } from 'jsr:@std/assert';
  * import { Dependency } from 'jsr:@oneday/simple-di';
  *
- * class User { constructor(public name: string) { } };
+ * class UserService {
+ *   constructor(public name: string) {}
+ * }
  *
- * const user = new Dependency(User, ['John'], true);
+ * const userDep = new Dependency(UserService, ['Alice']);
+ * console.log(userDep.resolve.name); // "Alice"
+ * ```
  *
- * assertEquals(user.resolve.name, 'John');
+ * @example With caching
+ * ```ts
+ * const cached = new Dependency(UserService, ['Bob'], true);
+ * const instance1 = cached.resolve;
+ * const instance2 = cached.resolve;
+ * console.log(instance1 === instance2); // true (same instance)
+ *
+ * const notCached = new Dependency(UserService, ['Charlie'], false);
+ * const instance3 = notCached.resolve;
+ * const instance4 = notCached.resolve;
+ * console.log(instance3 === instance4); // false (different instances)
+ * ```
+ *
+ * @example Manual injection for testing
+ * ```ts
+ * class MockUserService {
+ *   constructor(public name: string) {}
+ * }
+ *
+ * const userDep = new Dependency(UserService, ['Alice']);
+ * userDep.injection(new MockUserService('Mock'));
+ * console.log(userDep.resolve.name); // "Mock"
+ *
+ * userDep.clearInjected();
+ * console.log(userDep.resolve.name); // "Alice"
+ * ```
+ *
+ * @example Disposable pattern
+ * ```ts
+ * class Database implements Disposable {
+ *   constructor(public url: string) {}
+ *
+ *   [Symbol.dispose]() {
+ *     console.log('Closing database connection');
+ *   }
+ * }
+ *
+ * const dbDep = new Dependency(Database, ['postgresql://localhost']);
+ *
+ * {
+ *   using _ = dbDep;
+ *   const mockDb = new Database('mock://test');
+ *   dbDep.injection(mockDb);
+ *   // Use mockDb...
+ * } // mockDb is automatically disposed here
  * ```
  */
 export class Dependency<Service> implements Disposable {
@@ -26,7 +90,21 @@ export class Dependency<Service> implements Disposable {
   #stack = new DisposableStack()
 
   /**
-   * Constructor overload for classes without required parameters
+   * Creates a new Dependency instance for a class without required constructor parameters.
+   *
+   * @param serviceInitializer The class constructor to instantiate.
+   * @param args Optional empty array of constructor arguments.
+   * @param cacheable Whether to cache the resolved instance. Defaults to `true`.
+   *
+   * @example
+   * ```ts
+   * class Logger {
+   *   log(msg: string) { console.log(msg); }
+   * }
+   *
+   * const logger = new Dependency(Logger);
+   * logger.resolve.log('Hello'); // "Hello"
+   * ```
    */
   constructor(
     serviceInitializer: ClassType<Service> & (new () => Service),
@@ -34,7 +112,24 @@ export class Dependency<Service> implements Disposable {
     cacheable?: boolean,
   )
   /**
-   * Constructor overload for classes with parameters
+   * Creates a new Dependency instance for a class with constructor parameters.
+   *
+   * @param serviceInitializer The class constructor to instantiate.
+   * @param args Array of constructor arguments with strict type checking.
+   * @param cacheable Whether to cache the resolved instance. Defaults to `true`.
+   *
+   * @example
+   * ```ts
+   * class UserService {
+   *   constructor(public name: string, public age: number) {}
+   * }
+   *
+   * // ✅ Correct: types match
+   * const user = new Dependency(UserService, ['Alice', 30]);
+   *
+   * // ❌ Compile error: wrong types
+   * // const user = new Dependency(UserService, [123, 'invalid']);
+   * ```
    */
   constructor(
     serviceInitializer: ClassType<Service>,
@@ -52,26 +147,51 @@ export class Dependency<Service> implements Disposable {
   }
 
   /**
-   * Injects a service instance directly. Useful for overriding the default service.
+   * Manually injects a service instance, overriding the default service.
    *
-   * # Example
+   * This is particularly useful for testing, where you can inject mock implementations.
+   * If the injected service implements `Disposable`, it will be automatically disposed
+   * when the dependency is disposed or when `clearInjected()` is called.
    *
+   * **Important:** Only injected services are disposed, not services created by the constructor.
+   *
+   * @param service The service instance to inject.
+   * @returns This dependency instance for method chaining.
+   *
+   * @example Basic injection
    * ```ts
-   * import { assertInstanceOf } from 'jsr:@std/assert';
-   * import { Dependency } from 'jsr:@oneday/simple-di';
+   * class UserService {
+   *   getUser() { return 'Real user'; }
+   * }
    *
-   * class User {};
-   * class UserInjected {};
+   * class MockUserService {
+   *   getUser() { return 'Mock user'; }
+   * }
    *
-   * const user = new Dependency(User, []);
-   * user.injection(new UserInjected());
+   * const userDep = new Dependency(UserService, []);
+   * userDep.injection(new MockUserService());
+   * console.log(userDep.resolve.getUser()); // "Mock user"
+   * ```
    *
-   * assertInstanceOf(user.resolve, UserInjected);
+   * @example Disposable injection
+   * ```ts
+   * class Database implements Disposable {
+   *   [Symbol.dispose]() {
+   *     console.log('Cleanup');
+   *   }
+   * }
+   *
+   * const dbDep = new Dependency(Database, ['prod']);
+   * {
+   *   using _ = dbDep;
+   *   dbDep.injection(new Database('mock'));
+   *   // Use mock...
+   * } // Automatically calls [Symbol.dispose]() on the mock
    * ```
    */
   injection(service: Service): this {
     this.#serviceInjected = service
-    
+
     // If the injected service is Disposable, add it to the stack
     if (
       service &&
@@ -85,22 +205,48 @@ export class Dependency<Service> implements Disposable {
   }
 
   /**
-   * Clear injected service.
+   * Clears the manually injected service and returns to using the original service.
    *
-   * # Example
+   * If the injected service implements `Disposable`, its `[Symbol.dispose]()` method
+   * will be called automatically before clearing the reference.
    *
+   * @returns This dependency instance for method chaining.
+   *
+   * @example
    * ```ts
-   * import { assertInstanceOf } from 'jsr:@std/assert';
-   * import { Dependency } from 'jsr:@oneday/simple-di';
+   * class UserService {
+   *   constructor(public name: string) {}
+   * }
    *
-   * class User {};
-   * class UserInjected {};
+   * class MockUserService {
+   *   constructor(public name: string) {}
+   * }
    *
-   * const user = new Dependency(User, []);
-   * user.injection(new UserInjected());
-   * user.clearInjected();
+   * const userDep = new Dependency(UserService, ['Alice']);
+   * console.log(userDep.resolve.name); // "Alice"
    *
-   * assertInstanceOf(user.resolve, User);
+   * userDep.injection(new MockUserService('Mock'));
+   * console.log(userDep.resolve.name); // "Mock"
+   *
+   * userDep.clearInjected();
+   * console.log(userDep.resolve.name); // "Alice" (back to original)
+   * ```
+   *
+   * @example With Disposable service
+   * ```ts
+   * class Database implements Disposable {
+   *   constructor(public url: string) {}
+   *
+   *   [Symbol.dispose]() {
+   *     console.log(`Closing connection to ${this.url}`);
+   *   }
+   * }
+   *
+   * const dbDep = new Dependency(Database, ['prod-db']);
+   * dbDep.injection(new Database('test-db'));
+   *
+   * dbDep.clearInjected(); // Logs: "Closing connection to test-db"
+   * console.log(dbDep.resolve.url); // "prod-db"
    * ```
    */
   clearInjected(): this {
@@ -110,19 +256,62 @@ export class Dependency<Service> implements Disposable {
   }
 
   /**
-   * Resolve dependencies.
+   * Resolves and returns the service instance.
    *
-   * # Example
+   * Returns the manually injected service if one exists, otherwise returns
+   * the cached instance (if caching is enabled) or creates a new instance.
    *
+   * @returns The resolved service instance.
+   *
+   * @example Basic usage
    * ```ts
-   * import { assertEquals } from 'jsr:@std/assert';
-   * import { Dependency } from 'jsr:@oneday/simple-di';
+   * class UserService {
+   *   constructor(public name: string) {}
+   * }
    *
-   * class User { constructor(public name: string) {} };
+   * const userDep = new Dependency(UserService, ['Alice']);
+   * const user = userDep.resolve;
+   * console.log(user.name); // "Alice"
+   * ```
    *
-   * const user = new Dependency(User, ['John']);
+   * @example With caching enabled (default)
+   * ```ts
+   * class Counter {
+   *   count = 0;
+   *   increment() { this.count++; }
+   * }
    *
-   * assertEquals(user.resolve.name, 'John');
+   * const counterDep = new Dependency(Counter, [], true);
+   * counterDep.resolve.increment();
+   * counterDep.resolve.increment();
+   * console.log(counterDep.resolve.count); // 2 (same instance)
+   * ```
+   *
+   * @example With caching disabled
+   * ```ts
+   * class Counter {
+   *   count = 0;
+   *   increment() { this.count++; }
+   * }
+   *
+   * const counterDep = new Dependency(Counter, [], false);
+   * counterDep.resolve.increment();
+   * counterDep.resolve.increment();
+   * console.log(counterDep.resolve.count); // 1 (new instance each time)
+   * ```
+   *
+   * @example Priority: injected > cached > new
+   * ```ts
+   * const userDep = new Dependency(UserService, ['Original']);
+   *
+   * const cached = userDep.resolve; // Creates and caches instance
+   * console.log(cached.name); // "Original"
+   *
+   * userDep.injection(new UserService('Injected'));
+   * console.log(userDep.resolve.name); // "Injected" (injected takes priority)
+   *
+   * userDep.clearInjected();
+   * console.log(userDep.resolve.name); // "Original" (returns to cached)
    * ```
    */
   get resolve(): Service {
@@ -140,6 +329,49 @@ export class Dependency<Service> implements Disposable {
     ) as Service)
   }
 
+  /**
+   * Disposes the dependency and cleans up resources.
+   *
+   * This method is called automatically when using the `using` keyword.
+   * It disposes any injected service that implements `Disposable` and clears
+   * the injected service reference.
+   *
+   * **Important:** Only manually injected services are disposed, not services
+   * created by the constructor. The cached service instance is preserved.
+   *
+   * @example Automatic disposal with `using` keyword
+   * ```ts
+   * class Database implements Disposable {
+   *   constructor(public url: string) {
+   *     console.log(`Connected to ${url}`);
+   *   }
+   *
+   *   [Symbol.dispose]() {
+   *     console.log(`Disconnected from ${this.url}`);
+   *   }
+   * }
+   *
+   * const dbDep = new Dependency(Database, ['prod-db']);
+   *
+   * {
+   *   using _ = dbDep;
+   *   dbDep.injection(new Database('test-db'));
+   *   // Logs: "Connected to test-db"
+   *   // Use test-db...
+   * } // Logs: "Disconnected from test-db" (automatic disposal)
+   *
+   * console.log(dbDep.resolve.url); // "prod-db" (original still available)
+   * ```
+   *
+   * @example Manual disposal
+   * ```ts
+   * const dbDep = new Dependency(Database, ['prod-db']);
+   * dbDep.injection(new Database('test-db'));
+   *
+   * dbDep[Symbol.dispose](); // Manually dispose
+   * // Logs: "Disconnected from test-db"
+   * ```
+   */
   [Symbol.dispose]() {
     this.#stack.dispose()
   }
