@@ -9,7 +9,7 @@ import { STATUS_CODES } from 'node:http'
  *
  * @example The HTTPStatus and httpStatusText
  * ```ts
- * import { assertEquals } from 'jsr:@std/assert/equals';
+ * import { assertEquals } from '@std/assert';
  * import {
  *   HTTPStatus,
  *   httpStatusText
@@ -24,7 +24,7 @@ import { STATUS_CODES } from 'node:http'
  * # Example
  *
  * ```ts
- * import { assertEquals } from 'jsr:@std/assert/equals';
+ * import { assertEquals } from '@std/assert';
  * import { HTTPStatus } from "jsr:@oneday/http-status";
  *
  * assertEquals(HTTPStatus.NotFound, 404);
@@ -165,12 +165,15 @@ export enum HTTPStatus {
  * # Example
  *
  * ```ts
- * import { assertEquals } from 'jsr:@std/assert/equals';
+ * import { assertEquals } from '@std/assert';
  * import { httpStatusText } from "jsr:@oneday/http-status";
  *
  * assertEquals(httpStatusText(404), 'NotFound');
  * assertEquals(httpStatusText(0), 'UnknownError');
  * ```
  */
-export const httpStatusText = (HTTPStatus: HTTPStatus | number): string =>
-  STATUS_CODES[HTTPStatus] ?? 'UnknownError'
+export const httpStatusText = (HTTPStatus: HTTPStatus | number): string => {
+  const text = STATUS_CODES[HTTPStatus]
+  if (!text) return 'UnknownError'
+  return text.replace(/\s+/g, '')
+}

@@ -15,7 +15,7 @@ Enum of http status for typescript.
 Enum of http status for typescript
 
 ```ts
-import { assertEquals } from 'jsr:@std/assert/equals'
+import { assertEquals } from '@std/assert'
 import { HTTPStatus } from 'jsr:@oneday/http-status'
 
 assertEquals(HTTPStatus.InternalServerError, 500)
@@ -24,7 +24,7 @@ assertEquals(HTTPStatus.InternalServerError, 500)
 _httpStatusText()_:
 
 ```ts
-import { assertEquals } from 'jsr:@std/assert/equals'
+import { assertEquals } from '@std/assert'
 import { httpStatusText } from 'jsr:@oneday/http-status'
 
 assertEquals(httpStatusText(500), 'InternalServerError')
